@@ -1,0 +1,166 @@
+\documentclass{report}
+\usepackage{color}
+\usepackage{graphicx}
+%\usepackage{lipsum}
+%\usepackage{cutwin}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{rotating}
+\usepackage[utf8]{inputenc}
+%\usepackage[portuguese]{babel}
+\begin{document}
+	\begin{titlepage}
+		\centering
+		\vspace*{0.5 cm}
+		\includegraphics[scale = 0.75]{umee}\\[1.0 cm]
+		\textsc{\LARGE University of Minho}\\[2.0 cm]
+		\textsc{\Large Project II}\\[0.5 cm]		
+		\textsc{\large Integrated Master in Electronics and Computer Engineering}\\[0.5 cm]				% Course Name
+		\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+			{ \huge \bfseries Final Report} \\
+            { \huge \bfseries Modeling for Dynamic Binary Translation \\
+ 			\LARGE \bfseries Code Generation}
+			
+		\rule{\linewidth}{0.2 mm} \\[1.5 cm]
+			
+			\begin{minipage}{0.4\textwidth}
+				\begin{flushleft} \large
+					\emph{Authors:}\\
+					Ana Rita Fernandes Martins\\
+					David Miguel Parente Almeida
+				\end{flushleft}
+			\end{minipage}~
+			\begin{minipage}{0.4\textwidth}
+				\begin{flushright} \large
+					\emph{Number:} \\
+					64734 \\
+					68532
+				\end{flushright}
+			\end{minipage}\\[2 cm]
+            
+			\begin{minipage}{0.4\textwidth}
+				\begin{flushright} \large
+					\emph{Advisor:}\\
+     				\emph{Co-Advisor:}
+				\end{flushright}
+			\end{minipage}~
+			\begin{minipage}{0.4\textwidth}
+				\begin{flushleft} \large
+					Adriano Tavares\\
+					Filipe Salgado 
+				\end{flushleft}
+			\end{minipage}\\[2 cm]
+			
+		{\large Guimarães, \today }\\[2 cm]
+			
+		\vfill
+		
+	\pagenumbering{gobble}
+	\end{titlepage}
+	
+	\newpage
+  
+	\tableofcontents
+	
+	\newpage
+	
+	\pagenumbering{arabic}
+    
+    \chapter{Abstract}
+    
+    \par Creating a model for a embedded system provides a time-saving and cost-effective approach to the development of dynamic systems, based on a single model maintained in a tightly integrated software. 
+    \par Using modern modeling software tools it is possible to design and perform initial validation. It is possible to reduce the risk of errors and shorten development time by performing verification and validation testing throughout the development. Errors and overhead can also be reduced through the use of automatic code generation techniques\cite{modelling-embsys}.
+   
+	\section{Introduction}
+	
+	\par 
+    
+    \subsection{Motivation}
+    
+    \par 
+    
+    \subsection{Problem Statement}
+    
+    \par Nowadays the complexity of embedded systems is high, so there is a growing need of automation in the configuration and generation of the final system.
+	\par This project is inserted in the context of the major of Embedded Systems where a Domain Specific Language (DSL) will be developed together with other groups which purpose is modeling an embedded system and it’s respective code generation. 
+	\par Using this language, a model of the code generator block from the Dynamic Binary Translator (DBT) should be implemented, by identifying all of its features.
+    \par The source code follows a 8051 ISA and the translated code is generated for a ARMv7-M ISA. The modeling is done keeping the ARMv7-M architecture in mind.
+
+    \subsection{State Of The Art}
+    
+    \subsection{Report Organization}
+    
+    \section{Theoretical Fundamentals}
+    
+    \subsection{Domain Specific Languages}
+    
+    \subsubsection{Xtext}
+    
+    \subsubsection{Xtend}
+    
+    \subsection{Modeling}
+    
+    \subsection{Design Pattern}
+    
+    \subsubsection{Composite}
+    
+    \subsection{Dynamic Binary Translation}
+
+	\section{Analysis Phase}
+    
+    \subsection{System Overview}
+    
+    \subsection{Requirements}
+    
+    \subsection{Constraints}
+    
+    \subsection{Application Scenario}
+    
+    \subsection{Block Diagram}
+    
+    \subsection{Calendaring}
+    
+    \section{Design Phase}
+    
+    \subsection{Xtext Framework}
+    
+    \subsection{Elaboration Language}
+    
+    \subsubsection{Grammar}
+    
+    \subsubsection{Compiler and Elaborator}
+   
+    \subsection{Code Refactoring}
+	
+    \subsection{Reference Architecture}
+    
+    \subsection{Generator}
+    
+    \subsection{Implementation Plan}
+    
+    \subsection{Test Plans}
+    
+    \section{Implementation Phase}
+    
+    \section{Conclusion}
+    
+    \subsection{Future Work}
+    
+%	\begin{figure} [!h]
+%	\centering
+%	\includegraphics[width=0.25\linewidth]{eixos}
+%	\caption{Os três eixos a considerar.\cite{stm}}
+%	\label{fig:eixos}
+%	\end{figure}
+	
+	\newpage
+		
+	\begin{thebibliography} {9}
+			
+		%\bibitem{stm} STMicroelectronics, "LIS302DL: MEMS motion sensor 3-axis - $\pm$2g/$\pm$8g smart digital output “piccolo” accelerometer", October 2008
+		
+		\bibitem{modelling-embsys} Embedded, "Modeling of embedded designs - Part 1: Why model?". [Online]. Available: http://www.embedded.com/design/prototyping-and-development/4399743/Modeling-of-embedded-designs--Why-model--
+				
+	\end{thebibliography}
+	
+\end{document}
