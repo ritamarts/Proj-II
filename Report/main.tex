@@ -12,7 +12,7 @@
 	\begin{titlepage}
 		\centering
 		\vspace*{0.5 cm}
-		\includegraphics[scale = 0.75]{umee}\\[1.0 cm]
+		\includegraphics[scale = 0.75]{Images/umee}\\[1.0 cm]
 		\textsc{\LARGE University of Minho}\\[2.0 cm]
 		\textsc{\Large Project II}\\[0.5 cm]		
 		\textsc{\large Integrated Master in Electronics and Computer Engineering}\\[0.5 cm]				% Course Name
@@ -59,7 +59,7 @@
 	\end{titlepage}
 	
 	\newpage
-  
+	\pagenumbering{roman}  
 	\tableofcontents
 	
 	\newpage
@@ -71,93 +71,69 @@
     \par Creating a model for a embedded system provides a time-saving and cost-effective approach to the development of dynamic systems, based on a single model maintained in a tightly integrated software. 
     \par Using modern modeling software tools it is possible to design and perform initial validation. It is possible to reduce the risk of errors and shorten development time by performing verification and validation testing throughout the development. Errors and overhead can also be reduced through the use of automatic code generation techniques\cite{modelling-embsys}.
    
-	\section{Introduction}
+	\chapter{Analysis}
 	
 	\par 
     
-    \subsection{Motivation}
+    \section{Motivation}
     
     \par 
     
-    \subsection{Problem Statement}
+    \section{Problem Statement}
     
     \par Nowadays the complexity of embedded systems is high, so there is a growing need of automation in the configuration and generation of the final system.
 	\par This project is inserted in the context of the major of Embedded Systems where a Domain Specific Language (DSL) will be developed together with other groups which purpose is modeling an embedded system and it’s respective code generation. 
 	\par Using this language, a model of the code generator block from the Dynamic Binary Translator (DBT) should be implemented, by identifying all of its features.
     \par The source code follows a 8051 ISA and the translated code is generated for a ARMv7-M ISA. The modeling is done keeping the ARMv7-M architecture in mind.
 
-    \subsection{State Of The Art}
+    \section{State Of The Art}
     
-    \subsection{Report Organization}
-    
-    \section{Theoretical Fundamentals}
+    \section{Modeling Languages}
     
     \subsection{Domain Specific Languages}
     
-    \subsubsection{Xtext}
+    \subsection{Elaboration Language}
     
-    \subsubsection{Xtend}
+    \subsection{Workflow}
     
-    \subsection{Modeling}
+    \subsection{Service Component Architecture}
     
-    \subsection{Design Pattern}
+    \subsection{Syntax and Semantics}
     
-    \subsubsection{Composite}
+    \subsection{Use Cases}
     
-    \subsection{Dynamic Binary Translation}
-
-	\section{Analysis Phase}
+    \subsection{Example}
     
-    \subsection{System Overview}
-    
-    \subsection{Requirements}
-    
-    \subsection{Constraints}
+    \section{Dynamic Binary Translation}
     
     \subsection{Application Scenario}
     
-    \subsection{Block Diagram}
+    \section{Block Diagram}
     
-    \subsection{Calendaring}
+    \section{Implementation Plan}
     
-    \section{Design Phase}
+    \chapter{Conception}
     
-    \subsection{Xtext Framework}
+    \section{Reference Architecture}
     
-    \subsection{Elaboration Language}
+    \subsection{Optimization}
     
-    \subsubsection{Grammar}
+    \subsection{Generation}
     
-    \subsubsection{Compiler and Elaborator}
-   
-    \subsection{Code Refactoring}
-	
-    \subsection{Reference Architecture}
+    \section{Test Plans}
     
-    \subsection{Generator}
+    \chapter{Implementation Phase}
     
-    \subsection{Implementation Plan}
+    \section{Reference Architecture}
     
-    \subsection{Test Plans}
+    \chapter{Conclusion}
     
-    \section{Implementation Phase}
+    \section{Future Work}
     
-    \section{Conclusion}
-    
-    \subsection{Future Work}
-    
-%	\begin{figure} [!h]
-%	\centering
-%	\includegraphics[width=0.25\linewidth]{eixos}
-%	\caption{Os três eixos a considerar.\cite{stm}}
-%	\label{fig:eixos}
-%	\end{figure}
 	
 	\newpage
 		
 	\begin{thebibliography} {9}
-			
-		%\bibitem{stm} STMicroelectronics, "LIS302DL: MEMS motion sensor 3-axis - $\pm$2g/$\pm$8g smart digital output “piccolo” accelerometer", October 2008
 		
 		\bibitem{modelling-embsys} Embedded, "Modeling of embedded designs - Part 1: Why model?". [Online]. Available: http://www.embedded.com/design/prototyping-and-development/4399743/Modeling-of-embedded-designs--Why-model--
 				
