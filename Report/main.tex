@@ -1,142 +1,243 @@
 \documentclass{report}
 \usepackage{color}
 \usepackage{graphicx}
-%\usepackage{lipsum}
-%\usepackage{cutwin}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \usepackage[margin=1.2in]{geometry}
 \usepackage{rotating}
 \usepackage[utf8]{inputenc}
-%\usepackage[portuguese]{babel}
+\usepackage{multirow}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx} 
+\usepackage{tabulary}
+\usepackage{cutwin}
+\usepackage{caption}
+\usepackage{lipsum}
+\usepackage{wrapfig}
+\usepackage{color}
+\usepackage{eurosym}
+%\usepackage{glossaries}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{titlesec}
+\usepackage{enumerate}
+\usepackage{listings}
+
+\newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}}}{\end{list}}
+\newcommand{\abbrlabel}[1]{\makebox[3cm][l]{\textbf{#1}\ \dotfill}}
+
 \begin{document}
-	\begin{titlepage}
-		\centering
-		\vspace*{0.5 cm}
-		\includegraphics[scale = 0.75]{Images/umee}\\[1.0 cm]
-		\textsc{\LARGE University of Minho}\\[2.0 cm]
-		\textsc{\Large Project II}\\[0.5 cm]		
-		\textsc{\large Integrated Master in Electronics and Computer Engineering}\\[0.5 cm]				% Course Name
-		\rule{\linewidth}{0.2 mm} \\[0.4 cm]
-			{ \huge \bfseries Final Report} \\
-            { \huge \bfseries Modeling for Dynamic Binary Translation \\
- 			\LARGE \bfseries Code Generation}
-			
-		\rule{\linewidth}{0.2 mm} \\[1.5 cm]
-			
-			\begin{minipage}{0.4\textwidth}
-				\begin{flushleft} \large
-					\emph{Authors:}\\
-					Ana Rita Fernandes Martins\\
-					David Miguel Parente Almeida
-				\end{flushleft}
-			\end{minipage}~
-			\begin{minipage}{0.4\textwidth}
-				\begin{flushright} \large
-					\emph{Number:} \\
-					64734 \\
-					68532
-				\end{flushright}
-			\end{minipage}\\[2 cm]
-            
-			\begin{minipage}{0.4\textwidth}
-				\begin{flushright} \large
-					\emph{Advisor:}\\
-     				\emph{Co-Advisor:}
-				\end{flushright}
-			\end{minipage}~
-			\begin{minipage}{0.4\textwidth}
-				\begin{flushleft} \large
-					Adriano Tavares\\
-					Filipe Salgado 
-				\end{flushleft}
-			\end{minipage}\\[2 cm]
-			
-		{\large Guimarães, \today }\\[2 cm]
-			
-		\vfill
+	
+\begin{titlepage}
+	\centering
+	\vspace*{0.5 cm}
+	\includegraphics[scale = 0.75]{Images/umee}\\[1.0 cm]
+	\textsc{\LARGE University of Minho}\\[2.0 cm]
+	\textsc{\Large Project II}\\[0.5 cm]		
+	\textsc{\large Integrated Master in Electronics and Computer Engineering}\\[0.5 cm]				% Course Name
+	\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+		{ \huge \bfseries Final Report} \\
+        { \huge \bfseries Modeling for Dynamic Binary Translation \\
+			\LARGE \bfseries Code Generation}
 		
-	\pagenumbering{gobble}
-	\end{titlepage}
+	\rule{\linewidth}{0.2 mm} \\[1.5 cm]
+		
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{Authors:}\\
+				Ana Rita Fernandes Martins\\
+				David Miguel Parente Almeida
+			\end{flushleft}
+		\end{minipage}~
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{Number:} \\
+				64734 \\
+				68532
+			\end{flushright}
+		\end{minipage}\\[2 cm]
+		
+	{\large Guimarães, \today }\\[2 cm]
+		
+	\vfill
 	
-	\newpage
-	\pagenumbering{roman}  
-	\tableofcontents
+\pagenumbering{gobble}
+\end{titlepage}
 	
-	\newpage
+\newpage
+
+%-------------------------------------------
+\pagenumbering{roman}  
+\tableofcontents
+\newpage
+%-------------------------------------------	
+\listoffigures
+\newpage
+%-------------------------------------------	
+\listoftables
+\newpage
+%-------------------------------------------	
+\section*{Abbreviations}
+%please put in alfabetical order
+\begin{abbreviations} 
+	\item[DBT] Dynamic Binary Translator
+	\item[DSL] Domain Specific Language
+	\item[EL] Elaboration Language
+	\item[ISA] Instruction Set Architecture
+\end{abbreviations}
+\newpage
+%-------------------------------------------	
+\pagenumbering{arabic}
+%START ABSTRACT CHAPTER
+\chapter{Abstract}
+
+\par Creating a model for a embedded system provides a time-saving and cost-effective approach to the development of dynamic systems, based on a single model maintained in a tightly integrated software. 
+\par Using modern modeling software tools it is possible to design and perform initial validation. It is possible to reduce the risk of errors and shorten development time by performing verification and validation testing throughout the development. Errors and overhead can also be reduced through the use of automatic code generation techniques\cite{modelling-embsys}.
+%END ABSTRACT CHAPTER
+%-------------------------------------------
+%START ANALYSIS CHAPTER
+\chapter{Analysis}
+
+	\section{Motivation}
 	
-	\pagenumbering{arabic}
-    
-    \chapter{Abstract}
-    
-    \par Creating a model for a embedded system provides a time-saving and cost-effective approach to the development of dynamic systems, based on a single model maintained in a tightly integrated software. 
-    \par Using modern modeling software tools it is possible to design and perform initial validation. It is possible to reduce the risk of errors and shorten development time by performing verification and validation testing throughout the development. Errors and overhead can also be reduced through the use of automatic code generation techniques\cite{modelling-embsys}.
-   
-	\chapter{Analysis}
+	\par Let's write this in the end.
+
+	\section{Objectives}
 	
-	\par 
-    
-    \section{Motivation}
-    
-    \par 
-    
-    \section{Problem Statement}
-    
-    \par Nowadays the complexity of embedded systems is high, so there is a growing need of automation in the configuration and generation of the final system.
+	\par The objectives of this work are:
+	\begin{itemize}
+		\item Identifying the modules for the reference architecture;
+		\item Modeling the implementation of a DBT;
+		\item etc
+	\end{itemize}
+
+	\section{Problem Statement}
+
+	\par Nowadays the complexity of embedded systems is high, so there is a growing need of automation in the configuration and generation of the final system.
 	\par This project is inserted in the context of the major of Embedded Systems where a Domain Specific Language (DSL) will be developed together with other groups which purpose is modeling an embedded system and it’s respective code generation. 
 	\par Using this language, a model of the code generator block from the Dynamic Binary Translator (DBT) should be implemented, by identifying all of its features.
-    \par The source code follows a 8051 ISA and the translated code is generated for a ARMv7-M ISA. The modeling is done keeping the ARMv7-M architecture in mind.
+	\par The source code follows a 8051 ISA and the translated code is generated for a ARMv7-M ISA. The modeling is done keeping the ARMv7-M architecture in mind.
 
-    \section{State Of The Art}
-    
-    \section{Modeling Languages}
-    
-    \subsection{Domain Specific Languages}
-    
-    \subsection{Elaboration Language}
-    
-    \subsection{Workflow}
-    
-    \subsection{Service Component Architecture}
-    
-    \subsection{Syntax and Semantics}
-    
-    \subsection{Use Cases}
-    
-    \subsection{Example}
-    
-    \section{Dynamic Binary Translation}
-    
-    \subsection{Application Scenario}
-    
-    \section{Block Diagram}
-    
-    \section{Implementation Plan}
-    
-    \chapter{Conception}
-    
-    \section{Reference Architecture}
-    
-    \subsection{Optimization}
-    
-    \subsection{Generation}
-    
-    \section{Test Plans}
-    
-    \chapter{Implementation Phase}
-    
-    \section{Reference Architecture}
-    
-    \chapter{Conclusion}
-    
-    \section{Future Work}
-    
+	\section{State Of The Art}
+
+	\par OpenMETA
+
+	\section{Modeling Languages}
+
+		\subsection{Domain Specific Languages}
+		
+		\par Domain Specific Languages are programming languages with the objective of abstracting and simplifying the code written for a specific case.  
+
+		\subsection{Elaboration Language}
+		
+		\par The framework used to model 
+
+		\subsection{Workflow}
+
+			\paragraph{Modeling}
+
+			\paragraph{Elaboration}
+
+			\paragraph{Configuration}
+
+			\paragraph{Generation}
+
+		\subsection{Service Component Architecture}
+		
+		\par 
+
+			\paragraph{EL Elements}
+
+			\subparagraph{Composite} A composite is a set of components.
+
+			\subparagraph{Component} 
+			
+			\subparagraph{Property}
+
+			\subparagraph{Interface} A list of functions.
+
+			\subparagraph{Service} Service provided by the component.
+
+			\subparagraph{Reference} A reference is 
+
+			\subparagraph{Wire} A bound created between a reference and a service of the same interface.
+
+			\subparagraph{Implementation}
+
+		\subsection{Syntax and Semantics}
+
+		\subsection{Use Cases}
+
+		\subsection{Example}
+
+	\section{Dynamic Binary Translator}
 	
-	\newpage
+		\par DBT allows the execution of the binary code from one architecture to a different one. It is used for emulation, migration, and recently for the economic implementation of complex ISAs [1].
 		
-	\begin{thebibliography} {9}
+		Translation can be done in hardware (for example, by circuits in a CPU) or in software (e.g. run-time engines, statical recompiler, emulators) [2].
 		
-		\bibitem{modelling-embsys} Embedded, "Modeling of embedded designs - Part 1: Why model?". [Online]. Available: http://www.embedded.com/design/prototyping-and-development/4399743/Modeling-of-embedded-designs--Why-model--
-				
-	\end{thebibliography}
+
+		\subsection{Application Scenario}
+
+	\section{Resources}
+
+		\subsection{Hardware}
+
+			\paragraph{placa do Filipe}
+
+		\subsection{Software}
+
+			\paragraph{Understand}
+
+			\paragraph{IAR}
+
+	\section{Block Diagram}
+
+	\section{Implementation Plan}
+
+%END ANALYSIS CHAPTER
+%-------------------------------------------
+%START CONCEPTION CHAPTER
+\chapter{Conception}
+
+	\section{Reference Architecture}
+
+		\subsection{Generation}
+
+		\subsection{Optimization}
+
+	\section{Test Plans}
+	
+%END CONCEPTION CHAPTER
+%-------------------------------------------
+%START IMPLEMENTATION CHAPTER
+\chapter{Implementation Phase}
+
+	\section{Reference Architecture}
+
+	\section{Code Refactoring}
+
+	\section{Code Generation}
+
+	\section{Optimization}
+
+%END CONCEPTION CHAPTER
+%-------------------------------------------
+%START CONCLUSION CHAPTER
+\chapter{Conclusion}
+
+	\section{Future Work}
+
+%END CONCLUSION CHAPTER
+%-------------------------------------------
+\newpage
+	
+\begin{thebibliography} {9}
+	
+	\bibitem{modelling-embsys} Embedded, "Modeling of embedded designs - Part 1: Why model?". [Online]. Available: http://www.embedded.com/design/prototyping-and-development/4399743/Modeling-of-embedded-designs--Why-model--
+			
+\end{thebibliography}
 	
 \end{document}
