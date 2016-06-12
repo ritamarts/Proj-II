@@ -133,7 +133,20 @@
 	\par OpenMETA
 
 	\section{Modeling Languages}
-
+	%START > WIKIPEDIA
+	\par A modeling language is any artificial language that can be used to express information or knowledge or systems in a structure that is defined by a consistent set of rules. The rules are used for interpretation of the meaning of components in the structure.
+	
+	\par A modeling language can be graphical or textual.[1]
+	
+	Graphical modeling languages use a diagram technique with named symbols that represent concepts and lines that connect the symbols and represent relationships and various other graphical notation to represent constraints.
+	Textual modeling languages may use standardized keywords accompanied by parameters or natural language terms and phrases to make computer-interpretable expressions.
+	An example of a graphical modeling language and a corresponding textual modeling language is EXPRESS.
+	
+	Not all modeling languages are executable, and for those that are, the use of them doesn't necessarily mean that programmers are no longer required. On the contrary, executable modeling languages are intended to amplify the productivity of skilled programmers, so that they can address more challenging problems, such as parallel computing and distributed systems.
+	
+	A large number of modeling languages appear in the literature.
+	%END
+		
 		\subsection{Domain Specific Languages}
 		
 		\par DSL are programming languages, commonly with a small set of expressions, with the objective of abstracting and simplifying the code written for a specific case. So, these languages are useful just when used in that specific situation. Tough they may look limited at a first glance, they may have all the necessary resources to write code for a determined domain.
@@ -141,6 +154,27 @@
 		\par To write a DSL it is necessary to gather all the requirements to avoid subjectiveness and to specify all the semantics. Then, it is written a set of grammatic rules that check the desired operation of the language. It is also important to implement software capable of validate the code, type checking and scoping.
 		\par After writing all of this software, it is necessary to implement engines that provide code generation. If the code generation is done nicely, the resulting behavioral model is correct.
 		
+		\subsection{Service Component Architecture}
+		%WRITE ABOUT SCA HERE
+		\par 
+		
+		\paragraph{Elaboration Language Context} EL is based on the SCA. Next it is presented every element that can be used and a brief description.
+		
+			\subparagraph{Composite} A composite is a set of components. These can be used to represent another components or a reference architecture.
+		
+			\subparagraph{Component} An entity that provides or references services. 
+		
+			\subparagraph{Property} Variables that can be defined inside the component and that store its characteristics. 
+		
+			\subparagraph{Interface} A list of functions that describe a service or reference.
+		
+			\subparagraph{Service} Set of operations associated to a component are characterized by an interface. 
+		
+			\subparagraph{Reference} A service that is consumed by a component. Also characterized by an interface.
+		
+			\subparagraph{Wire} A bound created between a reference and a service defined by the same interface.
+		
+			\subparagraph{Implementation} Code block implemented in a programming language.
 		
 		\subsection{Elaboration Language}
 		
@@ -148,9 +182,9 @@
 		\par EL follows the Service Component Architecture specification in which everything is composed by components. The components are related through services and references to that services. 
 		\par It is necessary to follow a work flow when using this DSL to create the necessary artifacts. Next the correct work flow is explained.
 
-		\subsection{Work Flow}
+			\subsubsection{Work Flow}
 		
-		\par To develop and use a reference architecture there must be followed a work flow, composed by four steps: modeling, elaboration, configuration and generation. Each step provides the artifacts necessary for the subjacent step.
+			\par To develop and use a reference architecture there must be followed a work flow, composed by four steps: modeling, elaboration, configuration and generation. Each step provides the artifacts necessary for the subjacent step.
 		
 			\paragraph{Modeling} The first step consists in designing the reference architecture and, after that, writing the respective EL scripts. In some cases it is necessary to make code refactoring to keep the code in concordance with the model. It is also necessary to annotate the source files so the elaborations can replace these same annotations for literal values or expressions.
 
@@ -159,42 +193,24 @@
 			\paragraph{Configuration} At compilation time there are generated XML files with the configuration of the reference architecture components. The User can alter these files and by that configure properties values, arrays sizes ou change which elaboration will modify the source code.
 
 			\paragraph{Generation} After completing all the steps above, the User can execute the Elaborator and generate the new source code. The Elaborator uses all the elaborations necessary to create the code.
-
-		\subsection{Service Component Architecture}
-		%WRITE ABOUT SCA HERE
-		\par 
-
-			\paragraph{Elaboration Language Context} EL is based on the SCA. Next it is presented every element that can be used and a brief description.
-
-			\subparagraph{Composite} A composite is a set of components. These can be used to represent another components or a reference architecture.
-
-			\subparagraph{Component} An entity that provides or references services. 
 			
-			\subparagraph{Property} Variables that can be defined inside the component and that store its characteristics. 
+			\subsubsection{Syntax and Semantics}
 
-			\subparagraph{Interface} A list of functions that describe a service or reference.
+			\subsubsection{Use Cases}
 
-			\subparagraph{Service} Set of operations associated to a component are characterized by an interface. 
-
-			\subparagraph{Reference} A service that is consumed by a component. Also characterized by an interface.
-
-			\subparagraph{Wire} A bound created between a reference and a service defined by the same interface.
-
-			\subparagraph{Implementation} Code block implemented in a programming language.
-
-		\subsection{Syntax and Semantics}
-
-		\subsection{Use Cases}
-
-		\subsection{Example}
+			\subsubsection{Example}
 
 	\section{Dynamic Binary Translator}
-	
-		\par DBT allows the execution of the binary code from one architecture to a different one. It is used for emulation, migration, and recently for the economic implementation of complex ISAs [1].
+		%START > TAKEN FROM SLIDES
+		\par A Dynamic Binary Translator (DBT) allows the execution of the binary code from one architecture to a different one. It is used for emulation, migration, and recently for the economic implementation of complex ISAs [1].
 		
-		Translation can be done in hardware (for example, by circuits in a CPU) or in software (e.g. run-time engines, statical recompiler, emulators) [2].
-		
+		\par Translation can be done in hardware (for example, by circuits in a CPU) or in software (e.g. run-time engines, statical recompiler, emulators) [2].
+		%END
 
+
+		\subsection{Source Architecture: Intel MCS-51}
+		
+		\subsection{Target Architecure: ARMv7-M}
 		\subsection{Application Scenario}
 
 	\section{Resources}
@@ -216,6 +232,7 @@
 %END ANALYSIS CHAPTER
 %-------------------------------------------
 %START DESIGN CHAPTER
+
 \chapter{Design}
 
 	\section{Reference Architecture}
@@ -229,6 +246,7 @@
 %END DESIGN CHAPTER
 %-------------------------------------------
 %START IMPLEMENTATION CHAPTER
+
 \chapter{Implementation Phase}
 
 	\section{Reference Architecture}
@@ -238,10 +256,15 @@
 	\section{Code Generation}
 
 	\section{Optimization}
+	
+	\section{Elaborations}
+	
+	\section{Elaboration Language Script}
 
 %END CONCEPTION CHAPTER
 %-------------------------------------------
 %START CONCLUSION CHAPTER
+
 \chapter{Conclusion}
 
 	\section{Future Work}
