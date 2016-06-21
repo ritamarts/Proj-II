@@ -24,9 +24,12 @@
 \usepackage{titlesec}
 \usepackage{enumerate}
 \usepackage{listings}
+%\usepackage{filecontents}
+\usepackage{cite}
 
 \newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}}}{\end{list}}
 \newcommand{\abbrlabel}[1]{\makebox[3cm][l]{\textbf{#1}\ \dotfill}}
+
 
 \begin{document}
 	
@@ -82,7 +85,8 @@
 \section*{Abbreviations}
 %please put in alfabetical order
 \begin{abbreviations} 
-	\item[DBT] Dynamic Binary Translator
+	\item[CC] Condition Codes
+	\item[DBT] Dynamic Binary Translation
 	\item[DSL] Domain Specific Language
 	\item[EL] Elaboration Language
 	\item[ISA] Instruction Set Architecture
@@ -200,12 +204,9 @@
 
 			\subsubsection{Example}
 
-	\section{Dynamic Binary Translator}
-		%START > TAKEN FROM SLIDES
-		\par A Dynamic Binary Translator (DBT) allows the execution of the binary code from one architecture to a different one. It is used for emulation, migration, and recently for the economic implementation of complex ISAs [1].
-		
-		\par Translation can be done in hardware (for example, by circuits in a CPU) or in software (e.g. run-time engines, statical recompiler, emulators) [2].
-		%END
+	\section{Dynamic Binary Translation}
+	\par Binary translation is the process of converting code for one ISA  architecture to code for another. There are two types of binary translation: static and dynamic. The main difference between the two approaches is that the static translation translates the entire program before the execution and dynamic translation translates code on demand \ref{}. This allows the dynamic binary translation (DBT) to deal with challenges that static binary translation do not suffice. 
+	\par The technique used in the code modeled by the group is BDT, which involves the dealing with condition codes (CC). CC are special architected bits that characterize instruction results.   
 
 
 		\subsection{Source Architecture: Intel MCS-51}
@@ -273,10 +274,7 @@
 %-------------------------------------------
 \newpage
 	
-\begin{thebibliography} {9}
-	
-	\bibitem{modelling-embsys} Embedded, "Modeling of embedded designs - Part 1: Why model?". [Online]. Available: http://www.embedded.com/design/prototyping-and-development/4399743/Modeling-of-embedded-designs--Why-model--
-			
-\end{thebibliography}
+\bibliography{mybib}{}
+\bibliographystyle{ieeetr}
 	
 \end{document}
