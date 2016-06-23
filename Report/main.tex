@@ -129,12 +129,6 @@
 		\caption{Compilation phases.}
 		\label{fig:compiler-sequence}
 	\end{figure}
-	
-
-	\par 
-	\section{State Of The Art}
-
-	\par OpenMETA
 
 	\section{Modeling Languages}
 	%START > WIKIPEDIA
@@ -189,6 +183,8 @@
 			\subsubsection{Work Flow}
 		
 			\par To develop and use a reference architecture there must be followed a work flow, composed by four steps: modeling, elaboration, configuration and generation. Each step provides the artifacts necessary for the subjacent step.
+			
+			\par ADD IMAGE OF WORK FLOW HERE
 		
 			\paragraph{Modeling} The first step consists in designing the reference architecture and, after that, writing the respective EL scripts. In some cases it is necessary to make code refactoring to keep the code in concordance with the model. It is also necessary to annotate the source files so the elaborations can replace these same annotations for literal values or expressions.
 
@@ -205,20 +201,59 @@
 			\subsubsection{Example}
 
 	\section{Dynamic Binary Translation}
-	\par Binary translation is the process of converting code for one ISA  architecture to code for another. There are two types of binary translation: static and dynamic. The main difference between the two approaches is that the static translation translates the entire program before the execution and dynamic translation translates code on demand \ref{}. This allows the dynamic binary translation (DBT) to deal with challenges that static binary translation do not suffice. 
-	\par The technique used in the code modeled by the group is BDT, which involves the dealing with condition codes (CC). CC are special architected bits that characterize instruction results.   
-
-
+	\par Binary translation is the process of converting code for one ISA architecture to code for another. There are two types of binary translation: static and dynamic. The main difference between the two approaches is that the static translation translates the entire program before the execution and dynamic translation translates code on demand. This allows the dynamic binary translation (DBT) to deal with challenges that static binary translation do not suffice \cite{b.hawkingsb.demskyd.brueningq.zhao2015}. 
+	\par In this project was used a dynamic binary translation to create the model. It translates one basic block at a time and then executes it. The translated code, as well as the source code, is cached so if one basic block is stored into the translation cache, the cache returns an hit and it is not necessary to translate it again. 
+	\par In this program, it was used the Intel MCS-51, also known as 8051, as the source architecture and the ARMv7-M as the target architecture. After the code refactoring, it is possible to change the source and target architecture. Although, the translation algorithm will need to be rewritten to adapt to the target architecture needs.
+	
 		\subsection{Source Architecture: Intel MCS-51}
 		
-		\subsection{Target Architecure: ARMv7-M}
+		\par The Intel MCS-51, also known as 8051, is part of a family of 8-bit microcontrollers family developed by Intel in the '80s. It is known for being ease of programming so it is used in large scale for small projects and to instruct students. By being a Complex Instruction Set Computer (CISC) microcontroller, it offers a large set of instructions. These characteristics make it the most popular microcontroller.
+		\par The 8051 only offers one memory, divided into two separated addressing spaces to data and programs. In the data memory, the inferior block is divided into three parts: the registers bank, the bit addressable area and the draft area.
+		\par The Control Processing Unit (CPU) Special Function Registers (SFR) , with exception of the Program Counter (PC), are allocated into the superior part of the intern data memory.  They are:
+		\begin{itemize}
+			\item ACC - Acumulator.
+			\item B - Used as source and target register to division and multiplication operations.
+			\item Stack Pointer (SP) - Pointer to the CPU stack.
+			\item Data Pointer (DPTR) - 16-bits register used to address the external data memory. Uses two bytes, the DPL (Data Pointer Low) and DPH (Data Pointer High).
+			\item P0, P1, P2, P3 - Used to latch the I/o ports.
+			\item Serial Data Buffer (SBUF) - Use to transmission and reception in the serial port.
+			\item Program Status Word (PSW) - Contains the CPU flags.
+			\item Timer Registers - The 8051 offers three timers and each has two 8-bit registers to configure. The Timer 0 uses TH0 and TL0, Timer 1 uses and TH1 and TL1 and Timer 2 uses TH2 and TL2.
+			\item Capture Registers (RCAP2H, RCAP2L) - Used by Timer 2 for the capture mode.
+			\item Control Registers - IP, IE, TMOD, RCON, SCON, PCON are control resisters used by the interruption system from serial port and timing sections. 
+		\end{itemize}
+		
+		\par It is important to note that at the time, the translation algorithm only provides a emulation of the ACC, B, SP and DPTR registers.
+		\par The 8051 offers five groups of instructions: arithmetic, branch, data transfer, logic and bit-oriented. Arithmetic instructions perform several tasks such as addition, subtraction, division and multiplication. Branch instructions can perform conditional and unconditional jumps. The main difference between them is that conditional jumps rely on the condition codes to verify if the branch is taken or not. Data transfer instructions move the content of one register to another. Logic instructions perform logic operations upon corresponding bits of two registers. Bit-oriented instructions are logic operations perform upon single bits\cite{mikroelektronika}.
+		\par The instructions size and format vary from 1 to 3 bytes to achieve the desired output. Even the same operation may vary in instruction size depending on the operands. Looking at the addition operation (ADD) case, when it is desired to add an immediate value to the accumulator (ADD A, \#immediate), 2 bytes are used. When it is desired to add the content of a register to the accumulator (ADD A, Rn), only 1 byte is used. This also means that the PC will be computed differently in accordance with the instruction size.
+		
+		\subsection{Target Architecture: ARMv7-M}
+		
+		\par The ARM Cortex-M is a family of 32-bit Reduced Instruction Set Computer (RISC) microcontrollers. The nucleon used in this project is the Cortex-M3.
+		\par Cortex-M3 follows the ARMv7-M architecture and has support to Thumb and Thumb-2 instructions. It incorporates a three stage pipeline with branch predictor, a Nested Vectored Interrupt Controller (NVIC) 
+		
+			\subsubsection{Thumb-2}
+		
+		
 		\subsection{Application Scenario}
 
 	\section{Resources}
 
 		\subsection{Hardware}
 
-			\paragraph{placa do Filipe}
+			\paragraph{SmartFusion2 Advanced Development Kit}
+			
+			site: http://www.microsemi.com/products/fpga-soc/design-resources/dev-kits/smartfusion2/smartfusion2-advanced-development-kit
+			
+			\par Microsemi's SmartFusion®2 Advanced Development Kit offers a full featured 150K LE device SmartFusion2 system-on-chip (SoC) FPGA. This 150K LE device inherently integrates reliable flash-based FPGA fabric, a 166 MHz Cortex™-M3 processor, advanced data security features, digital signal processing (DSP) blocks, static random-access memory (SRAM), embedded nonvolatile memory (eNVM), and industry-required high-performance communication interfaces—all on a single chip. This device also supports all the data security features available in SmartFusion2 devices.
+			
+			\par The Advanced Development Kit board has numerous standard and advanced peripherals such as: PCIe®x4 edge connector, two FMC connectors for using many off the shelf daughter cards, USB, Philips inter-integrated circuit (I2C), two gigabit Ethernet ports, serial peripheral interface (SPI), and UART. A high precision operational amplifier circuitry on the board helps to measure core power consumption by the device.
+			
+			\par The SmartFusion2 SoC FPGA memory management system is supported by 1 Giga Byte (GB) of on-board double data rate3 (DDR3) memory and 2 Giga Bit (Gb) SPI flash—1Gb connected to the Microcontroller Subsystem (MSS) and 1Gb connected to the FPGA fabric. The serializer and deserializer (SERDES) blocks can be accessed through the peripheral component interconnect express (PCIe) edge connector or high speed sub-miniature push-on (SMA) connectors or through on-board FPGA mezzanine card (FMC) connector.
+			
+			\par Kit has programming hardware implemented on-board and does not need an external FlashPro hardware for programming.
+			
+			\paragraph{Zybo}
 
 		\subsection{Software}
 
@@ -237,11 +272,9 @@
 \chapter{Design}
 
 	\section{Reference Architecture}
-
-		\subsection{Generation}
-
-		\subsection{Optimization}
-
+	
+	\section{Code Generation}
+	
 	\section{Test Plans}
 	
 %END DESIGN CHAPTER
@@ -250,13 +283,9 @@
 
 \chapter{Implementation Phase}
 
-	\section{Reference Architecture}
-
 	\section{Code Refactoring}
-
-	\section{Code Generation}
-
-	\section{Optimization}
+	
+	\section{Optimizations}
 	
 	\section{Elaborations}
 	
@@ -268,7 +297,7 @@
 
 \chapter{Conclusion}
 
-	\section{Future Work}
+	\section{Future Work} 
 
 %END CONCLUSION CHAPTER
 %-------------------------------------------
