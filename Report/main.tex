@@ -99,7 +99,7 @@
 \chapter{Abstract}
 
 \par Creating a model for a embedded system provides a time-saving and cost-effective approach to the development of dynamic systems, based on a single model maintained in a tightly integrated software. 
-\par Using modern modeling software tools it is possible to design and perform initial validation. It is possible to reduce the risk of errors and shorten development time by performing verification and validation testing throughout the development. Errors and overhead can also be reduced through the use of automatic code generation techniques\cite{modelling-embsys}.
+\par Using modern modeling software tools it is possible to design and perform initial validation. It is possible to reduce the risk of errors and shorten development time by performing verification and validation testing throughout the development. Errors and overhead can also be reduced through the use of automatic code generation techniques\cite{j.h.foleissa.l.t.d'amatoa.f.dasilva2012}.
 %END ABSTRACT CHAPTER
 %-------------------------------------------
 %START ANALYSIS CHAPTER
@@ -195,10 +195,66 @@
 			\paragraph{Generation} After completing all the steps above, the User can execute the Elaborator and generate the new source code. The Elaborator uses all the elaborations necessary to create the code.
 			
 			\subsubsection{Syntax and Semantics}
+			
+			\par It is essential to any language to be easily understandable. In the EL context it is necessary to understand how is it possible to express the service-based models.
+			\par To a better understanding it is exposed a simple model with two components in which one offers a service to another, represented in figure \ref{fig:example-diagram}.
+			
+			\begin{figure} [!h]
+				\centering
+				\includegraphics[width=0.5\linewidth]{Images/diagram}
+				\caption{Example diagram.}
+				\label{fig:example-diagram}
+			\end{figure}
+			
+			\par The example diagram shows an EL model, in which the \texttt{Composite} is the component from where the model is generated. In the code this is represented by the expression \texttt{compile Composite}. It is defined a \texttt{language} and both components should follow it. In the \texttt{language} definition it is indicated the annotation symbol to be used by the elaborations later. An \texttt{interface} is created with all the functions that component \texttt{C\_B} provides as services. The component \texttt{C\_A} has one property \texttt{P\_A} of the type \texttt{int} and one reference \texttt{R\_A} to the service of the other component, so this reference must follow the same interface as the respective service from \texttt{C\_B}. The component \texttt{C\_B} offers a service \texttt{S\_B} and has a property \texttt{P\_B} of the type \texttt{string} with the default value text. Finally it is declared the component \texttt{Composite} that contains the two components described above and the \texttt{bind} of the reference \texttt{R\_A} to the service \texttt{S\_B}.
+			
+			\begin{lstlisting}
+			compile Composite
+			
+			language C{
+				annotation: "@"
+			}
+			
+			interface Interface {
+				func1 func2
+			}
+			
+			component C_A (C) {
+				properties:
+					int P_A
+				references:
+					Interface R_A
+			}
+			
+			component C_B (C) {
+				properties:
+					string P_B : "text"
+				services:
+					Interface S_B
+			}
+			
+			component Composite (C) {
+				subcomponents:
+					C_A a
+					C_B b
+				
+				bind a.R_A to b.S_B
+			}
+			\end{lstlisting} 
 
 			\subsubsection{Use Cases}
-
-			\subsubsection{Example}
+			
+			\par Two actors, the designer and the user, can interact with the languages artifacts. The user differentiates
+			from the designer to the extent that not possess the technical skills to design a reference architecture.
+			\par The \textbf{designer} is responsible for writing the elaboration files and the EL model design. The \textbf{user} is only responsible for the configuration of properties, if they exist and the Elaborator execution.
+			
+			\begin{figure} [!h]
+				\centering
+				\includegraphics[width=0.5\linewidth]{Images/use-cases}
+				\caption{Example diagram.}
+				\label{fig:use-cases}
+			\end{figure}			
+			
 
 	\section{Dynamic Binary Translation}
 	\par Binary translation is the process of converting code for one ISA architecture to code for another. There are two types of binary translation: static and dynamic. The main difference between the two approaches is that the static translation translates the entire program before the execution and dynamic translation translates code on demand. This allows the dynamic binary translation (DBT) to deal with challenges that static binary translation do not suffice \cite{b.hawkingsb.demskyd.brueningq.zhao2015}. 
@@ -233,9 +289,7 @@
 		\par Cortex-M3 follows the ARMv7-M architecture and has support to Thumb and Thumb-2 instructions. It incorporates a three stage pipeline with branch predictor, a Nested Vectored Interrupt Controller (NVIC) 
 		
 			\subsubsection{Thumb-2}
-		
-		
-		\subsection{Application Scenario}
+
 
 	\section{Resources}
 
