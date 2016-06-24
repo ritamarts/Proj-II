@@ -100,6 +100,8 @@
 
 \par Creating a model for a embedded system provides a time-saving and cost-effective approach to the development of dynamic systems, based on a single model maintained in a tightly integrated software. 
 \par Using modern modeling software tools it is possible to design and perform initial validation. It is possible to reduce the risk of errors and shorten development time by performing verification and validation testing throughout the development. Errors and overhead can also be reduced through the use of automatic code generation techniques\cite{j.h.foleissa.l.t.d'amatoa.f.dasilva2012}.
+
+\par THIS IS NOT GOOD YET
 %END ABSTRACT CHAPTER
 %-------------------------------------------
 %START ANALYSIS CHAPTER
@@ -153,8 +155,8 @@
 		\par After writing all of this software, it is necessary to implement engines that provide code generation. If the code generation is done nicely, the resulting behavioral model is correct.
 		
 		\subsection{Service Component Architecture}
-		%WRITE ABOUT SCA HERE
-		\par 
+		
+		\par WRITE ABOUT SCA HERE
 		
 		\paragraph{Elaboration Language Context} EL is based on the SCA. Next it is presented every element that can be used and a brief description.
 		
@@ -184,7 +186,12 @@
 		
 			\par To develop and use a reference architecture there must be followed a work flow, composed by four steps: modeling, elaboration, configuration and generation. Each step provides the artifacts necessary for the subjacent step.
 			
-			\par ADD IMAGE OF WORK FLOW HERE
+			\begin{figure} [h]
+				\centering
+				\includegraphics[width=0.8\linewidth]{Images/arquitectura1}
+				\caption{EL Workflow.}
+				\label{fig:workflow}
+			\end{figure}
 		
 			\paragraph{Modeling} The first step consists in designing the reference architecture and, after that, writing the respective EL scripts. In some cases it is necessary to make code refactoring to keep the code in concordance with the model. It is also necessary to annotate the source files so the elaborations can replace these same annotations for literal values or expressions.
 
@@ -288,36 +295,93 @@
 		\par The ARM Cortex-M is a family of 32-bit Reduced Instruction Set Computer (RISC) microcontrollers. The nucleon used in this project is the Cortex-M3.
 		\par Cortex-M3 follows the ARMv7-M architecture and has support to Thumb and Thumb-2 instructions. It incorporates a three stage pipeline with branch predictor, a Nested Vectored Interrupt Controller (NVIC) 
 		
+		\par NOT FINISHED
+		
 			\subsubsection{Thumb-2}
+			
+	\section{Block Diagram}
+	
+	\par WRITE ABOUT THE IMAGE BELLOW
+		
+	\begin{figure} [!h]
+		\centering
+		\includegraphics[width=0.65\linewidth]{Images/block}
+		\caption{Dynamic Binary Translation block diagram.}
+		\label{fig:block}
+	\end{figure}
 
 
 	\section{Resources}
+	
+		\par For the concretization of this project, there will be used some hardware and software. These are presented next.
 
 		\subsection{Hardware}
+		
+			\par Here is described the hardware used during the project. All of it was chosen for availability reasons. 
 
 			\paragraph{SmartFusion2 Advanced Development Kit}
 			
-			site: http://www.microsemi.com/products/fpga-soc/design-resources/dev-kits/smartfusion2/smartfusion2-advanced-development-kit
+			\par Microsemi's SmartFusion2 Advanced Development Kit offers a full featured device SmartFusion2 system-on-chip FPGA. This device inherently integrates reliable flash-based FPGA fabric, a Cortex-M3 processor, digital signal processing (DSP) blocks, static random-access memory (SRAM), embedded nonvolatile memory (eNVM), and industry-required high-performance communication interfaces—all on a single chip \cite{microsemi}. 
+			\par This device is used to run the generated sources files so its veracity is verified. 
 			
-			\par Microsemi's SmartFusion®2 Advanced Development Kit offers a full featured 150K LE device SmartFusion2 system-on-chip (SoC) FPGA. This 150K LE device inherently integrates reliable flash-based FPGA fabric, a 166 MHz Cortex™-M3 processor, advanced data security features, digital signal processing (DSP) blocks, static random-access memory (SRAM), embedded nonvolatile memory (eNVM), and industry-required high-performance communication interfaces—all on a single chip. This device also supports all the data security features available in SmartFusion2 devices.
-			
-			\par The Advanced Development Kit board has numerous standard and advanced peripherals such as: PCIe®x4 edge connector, two FMC connectors for using many off the shelf daughter cards, USB, Philips inter-integrated circuit (I2C), two gigabit Ethernet ports, serial peripheral interface (SPI), and UART. A high precision operational amplifier circuitry on the board helps to measure core power consumption by the device.
-			
-			\par The SmartFusion2 SoC FPGA memory management system is supported by 1 Giga Byte (GB) of on-board double data rate3 (DDR3) memory and 2 Giga Bit (Gb) SPI flash—1Gb connected to the Microcontroller Subsystem (MSS) and 1Gb connected to the FPGA fabric. The serializer and deserializer (SERDES) blocks can be accessed through the peripheral component interconnect express (PCIe) edge connector or high speed sub-miniature push-on (SMA) connectors or through on-board FPGA mezzanine card (FMC) connector.
-			
-			\par Kit has programming hardware implemented on-board and does not need an external FlashPro hardware for programming.
-			
-			\paragraph{Zybo}
+			\begin{figure} [!h]
+				\centering
+				\includegraphics[width=0.5\linewidth]{Images/microsemi}
+				\caption{SmartFusion2 Advanced Development Kit.}
+				\label{fig:microsemi}
+			\end{figure}
+
+		\paragraph{Debugger} The debugger is used to communicate with the device and receive important information about the execution. It has a JTAG interface to interact with the processor and USB to interact with the computer, and supports all ARM 7/9/11, Cortex. In this project it is used the J-Link Segger. 
+		
+			\begin{figure} [!h]
+				\centering
+				\includegraphics[width=0.3\linewidth]{Images/jlink}
+				\caption{Segger J-Link.}
+				\label{fig:jlink}
+			\end{figure}
 
 		\subsection{Software}
+		
+		\par The software used in this project was available to download by the developers in internet. 
+		
+			\paragraph{Eclipse}
+			
+			\par 
+
+			\begin{figure} [!h]
+				\centering
+				\includegraphics[width=0.3\linewidth]{Images/eclipse}
+				\caption{Eclipse logo.}
+				\label{fig:eclipse}
+			\end{figure}
 
 			\paragraph{Understand}
+			
+			\begin{figure} [!h]
+				\centering
+				\includegraphics[width=0.3\linewidth]{Images/understand}
+				\caption{Understand logo.}
+				\label{fig:understand}
+			\end{figure}
 
 			\paragraph{IAR}
-
-	\section{Block Diagram}
+			
+			\begin{figure} [!h]
+				\centering
+				\includegraphics[width=0.2\linewidth]{Images/iar.jpg}
+				\caption{IAR logo.}
+				\label{fig:iar}
+			\end{figure}
 
 	\section{Implementation Plan}
+	
+	\par The first task is the study of the dynamic binary translator to get more familiar with the algorithm and completely understand it and its characteristics. The group's objective is to model the code generation, so this part will be studied more deeply.
+	\par The second task is the study of the EL framework, where the reference architecture will be implemented following the SCA method.
+	\par The third task is the implementation of the reference architecture in the framework and the code refactoring so it will fit the model. 
+	\par The fourth task is writing the correspondent EL scripts, annotate the source code and write the elaborations. This will make the code configurable.
+	\par It will also be necessary to prepare all the presentations, reports and poster in the project domain.
+
+	\par DIAGRAMA DE GANTT AQUI
 
 %END ANALYSIS CHAPTER
 %-------------------------------------------
@@ -325,9 +389,20 @@
 
 \chapter{Design}
 
-	\section{Reference Architecture}
+	\section{Code Analysis}
+	
+	\par source files
 	
 	\section{Code Generation}
+	
+	\section{Reference Architecture}
+	
+	\par ALL THE COMPONENTS
+	\par all the components properties, services, references
+	
+	\section{Code Refactoring}
+	
+
 	
 	\section{Test Plans}
 	
@@ -337,13 +412,19 @@
 
 \chapter{Implementation Phase}
 
-	\section{Code Refactoring}
-	
-	\section{Optimizations}
+	\section{Elaboration Language Script}
 	
 	\section{Elaborations}
 	
-	\section{Elaboration Language Script}
+	\par Generator
+	
+	\par falar das outras também
+	
+	\section{Optimizations}
+	
+	\section{Results}
+	
+
 
 %END CONCEPTION CHAPTER
 %-------------------------------------------
