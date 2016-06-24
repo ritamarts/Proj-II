@@ -30,6 +30,33 @@
 \newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}}}{\end{list}}
 \newcommand{\abbrlabel}[1]{\makebox[3cm][l]{\textbf{#1}\ \dotfill}}
 
+\titleclass{\subsubsubsection}{straight}[\subsection]
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+\renewcommand\theparagraph{\thesubsubsubsection.\arabic{paragraph}} % optional; useful if paragraphs are to be numbered
+\titleformat{\subsubsubsection}
+{\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\titlespacing*{\subsubsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{5}{\z@}%
+	{3.25ex \@plus1ex \@minus.2ex}%
+	{-1em}%
+	{\normalfont\normalsize\bfseries}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{6}{\parindent}%
+	{3.25ex \@plus1ex \@minus .2ex}%
+	{-1em}%
+	{\normalfont\normalsize\bfseries}}
+\def\toclevel@subsubsubsection{4}
+\def\toclevel@paragraph{5}
+\def\toclevel@paragraph{6}
+\def\l@subsubsubsection{\@dottedtocline{4}{7em}{4em}}
+\def\l@paragraph{\@dottedtocline{5}{10em}{5em}}
+\def\l@subparagraph{\@dottedtocline{6}{14em}{6em}}
+\makeatother
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
 
 \begin{document}
 	
@@ -133,19 +160,10 @@
 	\end{figure}
 
 	\section{Modeling Languages}
-	%START > WIKIPEDIA
-	\par A modeling language is any artificial language that can be used to express information or knowledge or systems in a structure that is defined by a consistent set of rules. The rules are used for interpretation of the meaning of components in the structure.
-	
-	\par A modeling language can be graphical or textual.[1]
-	
-	Graphical modeling languages use a diagram technique with named symbols that represent concepts and lines that connect the symbols and represent relationships and various other graphical notation to represent constraints.
-	Textual modeling languages may use standardized keywords accompanied by parameters or natural language terms and phrases to make computer-interpretable expressions.
-	An example of a graphical modeling language and a corresponding textual modeling language is EXPRESS.
-	
-	Not all modeling languages are executable, and for those that are, the use of them doesn't necessarily mean that programmers are no longer required. On the contrary, executable modeling languages are intended to amplify the productivity of skilled programmers, so that they can address more challenging problems, such as parallel computing and distributed systems.
-	
-	A large number of modeling languages appear in the literature.
-	%END
+	\par A modeling language is any artificial language that can be used to express information or knowledge or systems in a structure that is defined by a consistent set of rules. The rules are used for interpretation of the meaning of components in the structure. They can be graphical or textual.
+	\par Graphical modeling languages use a diagram technique with named symbols that represent concepts and lines that connect the symbols and represent relationships and various other graphical notation to represent constraints.
+	\par Textual modeling languages may use standardized keywords accompanied by parameters or natural language terms and phrases to make computer-interpretable expressions.
+	\par Not all modeling languages are executable, and for those that are, the use of them does not necessarily mean that programmers are no longer required. On the contrary, executable modeling languages are intended to amplify the productivity of skilled programmers, so that they can address more challenging problems, such as parallel computing and distributed systems\cite{wikipedia}.
 		
 		\subsection{Domain Specific Languages}
 		
@@ -156,7 +174,16 @@
 		
 		\subsection{Service Component Architecture}
 		
-		\par WRITE ABOUT SCA HERE
+		\par Service Component Architecture (SCA) is a programming model for abstracting functions as components and using them as building blocks to assemble solutions. A component offers services and depends on functions that are called references.
+		\par SCA provides a declarative way to describe how the services interact with one another. Since service interaction is declarative, solution developers remain focus on logic and therefore development cycle is simplified and shortened. This also promotes the development of reusable services that can be used in different contexts. For example, a shopping cart service can be used in a retail application or a travel application without changing. Services can interact with one another synchronously or asynchronously and can be implemented in any technology.
+		\par SCA also brings flexibility to deployment. A solution assembled with SCA is deployed as a unit and can be distributed over one or more nodes in the network and can be reconfigured without programming changes \cite{apachetuscany}.
+	
+		\begin{figure} [h]
+			\centering
+			\includegraphics[width=0.8\linewidth]{Images/sca}
+			\caption{SCA model example\cite{theenterprisearchitect}.}
+			\label{fig:sca}
+		\end{figure}
 		
 		\paragraph{Elaboration Language Context} EL is based on the SCA. Next it is presented every element that can be used and a brief description.
 		
@@ -188,7 +215,7 @@
 			
 			\begin{figure} [h]
 				\centering
-				\includegraphics[width=0.8\linewidth]{Images/arquitectura1}
+				\includegraphics[width=1\linewidth]{Images/workflow}
 				\caption{EL Workflow.}
 				\label{fig:workflow}
 			\end{figure}
@@ -288,25 +315,22 @@
 		
 		\par It is important to note that at the time, the translation algorithm only provides a emulation of the ACC, B, SP and DPTR registers.
 		\par The 8051 offers five groups of instructions: arithmetic, branch, data transfer, logic and bit-oriented. Arithmetic instructions perform several tasks such as addition, subtraction, division and multiplication. Branch instructions can perform conditional and unconditional jumps. The main difference between them is that conditional jumps rely on the condition codes to verify if the branch is taken or not. Data transfer instructions move the content of one register to another. Logic instructions perform logic operations upon corresponding bits of two registers. Bit-oriented instructions are logic operations perform upon single bits\cite{mikroelektronika}.
-		\par The instructions size and format vary from 1 to 3 bytes to achieve the desired output. Even the same operation may vary in instruction size depending on the operands. Looking at the addition operation (ADD) case, when it is desired to add an immediate value to the accumulator (ADD A, \#immediate), 2 bytes are used. When it is desired to add the content of a register to the accumulator (ADD A, Rn), only 1 byte is used. This also means that the PC will be computed differently in accordance with the instruction size.
+		\par The instructions size and format vary from 1 to 3 bytes to achieve the desired output. Even the same operation may vary in instruction size depending on the operands. Looking at the addition operation (\texttt{ADD}) case, when it is desired to add an immediate value to the accumulator (\texttt{ADD A, \#immediate}), 2 bytes are used. When it is desired to add the content of a register to the accumulator (\texttt{ADD A, Rn}), only 1 byte is used. This also means that the PC will be computed differently in accordance with the instruction size.
 		
 		\subsection{Target Architecture: ARMv7-M}
 		
-		\par The ARM Cortex-M is a family of 32-bit Reduced Instruction Set Computer (RISC) microcontrollers. The nucleon used in this project is the Cortex-M3.
-		\par Cortex-M3 follows the ARMv7-M architecture and has support to Thumb and Thumb-2 instructions. It incorporates a three stage pipeline with branch predictor, a Nested Vectored Interrupt Controller (NVIC) 
-		
-		\par NOT FINISHED
+		\par 
 		
 			\subsubsection{Thumb-2}
 			
-	\section{Block Diagram}
+	\subsection{Architectural Model}
 	
-	\par WRITE ABOUT THE IMAGE BELLOW
+	\par Figure \ref{fig:block} represents the model of the DBT engine. The execution flows as followed: a source code is loaded into a source code cache. This cache exists so that only the basic block that is being worked is loaded into RAM memory for quicker access. The DBT engine accesses the source code cache and translates the basic block which is then stored into Translation Cache. The code stored into this cache is native code for the target and ready to execute\cite{f.salgadoj.mendesa.tavaresm.ekpanyapong}.
 		
 	\begin{figure} [!h]
 		\centering
 		\includegraphics[width=0.65\linewidth]{Images/block}
-		\caption{Dynamic Binary Translation block diagram.}
+		\caption{Dynamic Binary Translation architectural model.}
 		\label{fig:block}
 	\end{figure}
 
@@ -346,7 +370,7 @@
 		
 			\paragraph{Eclipse}
 			
-			\par 
+			\par Eclipse Integrated Developing Environment (IDE) has first developed to program JAVA applications, but its plugins system provides the programming in various languages. This will be used to write the EL script, the elaborations and to generate code.
 
 			\begin{figure} [!h]
 				\centering
@@ -355,7 +379,7 @@
 				\label{fig:eclipse}
 			\end{figure}
 
-			\paragraph{Understand}
+			\paragraph{Understand} This software is used to perform the code analysis. The source files are used to create dependences graphs between modules. Is used to validate the code refactoring. 
 			
 			\begin{figure} [!h]
 				\centering
@@ -363,8 +387,8 @@
 				\caption{Understand logo.}
 				\label{fig:understand}
 			\end{figure}
-
-			\paragraph{IAR}
+\pagebreak
+			\paragraph{IAR Workbench} IAR Worksbench is an IDE used to program many platforms. This chosen platform is the ARM based. This software was used to compile the source code and validate the code generation.
 			
 			\begin{figure} [!h]
 				\centering
@@ -389,18 +413,87 @@
 
 \chapter{Design}
 
+	\par In this section the dynamic binary translator program is analyzed at detail. Then, the reference architecture is constructed in order to allow the systems configuration. 
+	\par The dependencies graph will be generated using the Understand software. After this analysis will be decided if the code needs to be refactored in order to be in accordance with the model. 
+	
 	\section{Code Analysis}
 	
-	\par source files
+	\par The primary source files assigned to the group were not written following a reference architecture. So, the first task is to understand how to code should be organized to be modular. This means that is necessary to identify components, services and references and how do they connect to each other.
+	\par The first step is to analyze the \texttt{main.cpp} file. It is created an object of the \texttt{DBTEngine} type and the code size and location are passed as arguments to the initialization (\texttt{initTranslator}) method. Hereupon is only necessary to run the translator (\texttt{runDBT}).
+	\par This takes to the first identified component: the \texttt{DBTEngine}. The functions \texttt{runDBT} and \texttt{initTranslator} form an interface and can be identified as a service that the top level reference. For this, there must be code into translation cache. If this cache is empty, a basic block stored into code cache must be translated. Here are identified one reference, one service and another component: \texttt{DBTEngine} makes a reference to a \texttt{TranslationCache} service. 
+
+	\section{Code Refactoring}
 	
+	\paragraph{main.cpp}
+	
+	\paragraph{CBuffer.cpp}
+	
+	\paragraph{CBuffer.h}
+	
+	\paragraph{DBTEngine.cpp}
+	
+	\paragraph{DBTEngine.h}
+	
+	\paragraph{SourceArch\_8051.cpp}
+	
+	\paragraph{SourceArch\_8051.h}
+	
+	\paragraph{SourceArchitecture.cpp}
+	
+	\paragraph{SourceArchitecture.h}
+	
+	\paragraph{TargetArch\_CortexM3.cpp}
+	
+	\paragraph{TargetArch\_CortexM3.h}
+	
+	\paragraph{TargetArchitecture.cpp}
+	
+	\paragraph{TargetArchitecture.h}
+	
+	\paragraph{TransBuffer.cpp}
+	
+	\paragraph{TransBuffer.h}
+	
+	\paragraph{Translator.cpp}
+	
+	\paragraph{Translator.h}
+	
+	\paragraph{Translator8051.cpp}
+	
+	\paragraph{Translator8051.h}
+	
+	\paragraph{types.h}
+		
 	\section{Code Generation}
 	
 	\section{Reference Architecture}
 	
-	\par ALL THE COMPONENTS
-	\par all the components properties, services, references
-	
-	\section{Code Refactoring}
+		\subsection{Source Cluster}
+		
+			\subsubsection{Source Architecture}
+		
+			\subsubsection{Source Environment}
+		
+				\subsubsubsection{Data Memory}
+		
+			\subsubsection{Decoder}
+		
+		
+		\subsection{Target Cluster}
+		
+			\subsubsection{Target Architecture}
+		
+			\subsubsection{Generator}
+			
+		\subsection{Code Cache}
+		
+		\subsection{Translation Cache}
+		
+		\subsection{DBT Engine}
+		
+			\subsubsection{Translate}
+			
+			\subsubsection{Execute}
 	
 
 	
@@ -415,6 +508,8 @@
 	\section{Elaboration Language Script}
 	
 	\section{Elaborations}
+	
+	\subsection{Annotations}
 	
 	\par Generator
 	
