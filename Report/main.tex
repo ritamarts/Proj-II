@@ -26,6 +26,7 @@
 \usepackage{listings}
 %\usepackage{filecontents}
 \usepackage{cite}
+\usepackage{float}
 
 \newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}}}{\end{list}}
 \newcommand{\abbrlabel}[1]{\makebox[3cm][l]{\textbf{#1}\ \dotfill}}
@@ -113,10 +114,16 @@
 %please put in alfabetical order
 \begin{abbreviations} 
 	\item[CC] Condition Codes
+	\item[CPU] Control Processing Unit
 	\item[DBT] Dynamic Binary Translation
 	\item[DSL] Domain Specific Language
 	\item[EL] Elaboration Language
 	\item[ISA] Instruction Set Architecture
+	\item[LR] Link Register
+	\item[PC] Program Counter
+	\item[SCA] Service Component Architecture
+	\item[SFR] Special Function Registers
+	\item[SP] Stack Pointer
 	\item[XML] eXtensible Markup Language
 \end{abbreviations}
 \newpage
@@ -152,7 +159,7 @@
 	\par Modeling is used in order to automate the configuration and generation of the final system. To create a model it is necessary a specialized framework, and the one used in this project was developed together with all the groups in the context of the major in Embedded Systems, consisting on a Domain Specific Language (DSL) which purpose is to model reference architectures and make its respective code generation. 
 	\par In this particular case, the modeling framework is used with the objective to model a DBT, in which the source code follows a 8051 Instruction Srt Architecture (ISA) and the translated code is generated for a ARMv7-M ISA.  The reference architecture was agreed by all the groups that are into this project, and this group focus is on the code generation for the target architecture and code optimization.
 	
-	\begin{figure} [h]
+	\begin{figure} [H]
 		\centering
 		\includegraphics[width=0.7\linewidth]{Images/DSL_use_cases}
 		\caption{Compilation phases.}
@@ -178,7 +185,7 @@
 		\par SCA provides a declarative way to describe how the services interact with one another. Since service interaction is declarative, solution developers remain focus on logic and therefore development cycle is simplified and shortened. This also promotes the development of reusable services that can be used in different contexts. For example, a shopping cart service can be used in a retail application or a travel application without changing. Services can interact with one another synchronously or asynchronously and can be implemented in any technology.
 		\par SCA also brings flexibility to deployment. A solution assembled with SCA is deployed as a unit and can be distributed over one or more nodes in the network and can be reconfigured without programming changes \cite{apachetuscany}.
 	
-		\begin{figure} [h]
+		\begin{figure} [H]
 			\centering
 			\includegraphics[width=0.8\linewidth]{Images/sca}
 			\caption{SCA model example\cite{theenterprisearchitect}.}
@@ -213,7 +220,7 @@
 		
 			\par To develop and use a reference architecture there must be followed a work flow, composed by four steps: modeling, elaboration, configuration and generation. Each step provides the artifacts necessary for the subjacent step.
 			
-			\begin{figure} [h]
+			\begin{figure} [H]
 				\centering
 				\includegraphics[width=1\linewidth]{Images/workflow}
 				\caption{EL Workflow.}
@@ -233,7 +240,7 @@
 			\par It is essential to any language to be easily understandable. In the EL context it is necessary to understand how is it possible to express the service-based models.
 			\par To a better understanding it is exposed a simple model with two components in which one offers a service to another, represented in figure \ref{fig:example-diagram}.
 			
-			\begin{figure} [!h]
+			\begin{figure} [H]
 				\centering
 				\includegraphics[width=0.5\linewidth]{Images/diagram}
 				\caption{Example diagram.}
@@ -282,9 +289,9 @@
 			from the designer to the extent that not possess the technical skills to design a reference architecture.
 			\par The \textbf{designer} is responsible for writing the elaboration files and the EL model design. The \textbf{user} is only responsible for the configuration of properties, if they exist and the Elaborator execution.
 			
-			\begin{figure} [!h]
+			\begin{figure} [H]
 				\centering
-				\includegraphics[width=0.5\linewidth]{Images/use-cases}
+				\includegraphics[width=0.4\linewidth]{Images/use-cases}
 				\caption{Example diagram.}
 				\label{fig:use-cases}
 			\end{figure}			
@@ -327,7 +334,7 @@
 	
 	\par Figure \ref{fig:block} represents the model of the DBT engine. The execution flows as followed: a source code is loaded into a source code cache. This cache exists so that only the basic block that is being worked is loaded into RAM memory for quicker access. The DBT engine accesses the source code cache and translates the basic block which is then stored into Translation Cache. The code stored into this cache is native code for the target and ready to execute\cite{f.salgadoj.mendesa.tavaresm.ekpanyapong}.
 		
-	\begin{figure} [!h]
+	\begin{figure} [H]
 		\centering
 		\includegraphics[width=0.65\linewidth]{Images/block}
 		\caption{Dynamic Binary Translation architectural model.}
@@ -348,7 +355,7 @@
 			\par Microsemi's SmartFusion2 Advanced Development Kit offers a full featured device SmartFusion2 system-on-chip FPGA. This device inherently integrates reliable flash-based FPGA fabric, a Cortex-M3 processor, digital signal processing (DSP) blocks, static random-access memory (SRAM), embedded nonvolatile memory (eNVM), and industry-required high-performance communication interfaces—all on a single chip \cite{microsemi}. 
 			\par This device is used to run the generated sources files so its veracity is verified. 
 			
-			\begin{figure} [!h]
+			\begin{figure} [H]
 				\centering
 				\includegraphics[width=0.5\linewidth]{Images/microsemi}
 				\caption{SmartFusion2 Advanced Development Kit.}
@@ -357,7 +364,7 @@
 
 		\paragraph{Debugger} The debugger is used to communicate with the device and receive important information about the execution. It has a JTAG interface to interact with the processor and USB to interact with the computer, and supports all ARM 7/9/11, Cortex. In this project it is used the J-Link Segger. 
 		
-			\begin{figure} [!h]
+			\begin{figure} [H]
 				\centering
 				\includegraphics[width=0.3\linewidth]{Images/jlink}
 				\caption{Segger J-Link.}
@@ -372,7 +379,7 @@
 			
 			\par Eclipse Integrated Developing Environment (IDE) has first developed to program JAVA applications, but its plugins system provides the programming in various languages. This will be used to write the EL script, the elaborations and to generate code.
 
-			\begin{figure} [!h]
+			\begin{figure} [H]
 				\centering
 				\includegraphics[width=0.3\linewidth]{Images/eclipse}
 				\caption{Eclipse logo.}
@@ -381,16 +388,16 @@
 
 			\paragraph{Understand} This software is used to perform the code analysis. The source files are used to create dependences graphs between modules. Is used to validate the code refactoring. 
 			
-			\begin{figure} [!h]
+			\begin{figure} [H]
 				\centering
 				\includegraphics[width=0.3\linewidth]{Images/understand}
 				\caption{Understand logo.}
 				\label{fig:understand}
 			\end{figure}
-\pagebreak
+			
 			\paragraph{IAR Workbench} IAR Worksbench is an IDE used to program many platforms. This chosen platform is the ARM based. This software was used to compile the source code and validate the code generation.
 			
-			\begin{figure} [!h]
+			\begin{figure} [H]
 				\centering
 				\includegraphics[width=0.2\linewidth]{Images/iar.jpg}
 				\caption{IAR logo.}
@@ -419,8 +426,29 @@
 	\section{Code Analysis}
 	
 	\par The primary source files assigned to the group were not written following a reference architecture. So, the first task is to understand how to code should be organized to be modular. This means that is necessary to identify components, services and references and how do they connect to each other.
-	\par The first step is to analyze the \texttt{main.cpp} file. It is created an object of the \texttt{DBTEngine} type and the code size and location are passed as arguments to the initialization (\texttt{initTranslator}) method. Hereupon is only necessary to run the translator (\texttt{runDBT}).
-	\par This takes to the first identified component: the \texttt{DBTEngine}. The functions \texttt{runDBT} and \texttt{initTranslator} form an interface and can be identified as a service that the top level reference. For this, there must be code into translation cache. If this cache is empty, a basic block stored into code cache must be translated. Here are identified one reference, one service and another component: \texttt{DBTEngine} makes a reference to a \texttt{TranslationCache} service. 
+	\par The first step is to analyze the \texttt{main} file. It is created an object of the \texttt{DBTEngine} type and the code size is passed as argument to the initialization method. Hereupon is only necessary to run the translator.
+	\par To start the translation, there must be code into translation cache. If the source PC does not have a Translation Cache entry, a new entry in Translation Cache is added. Then, the entry location is saved as "next to execute" and a prolog is generated. The prolog pushes all the necessary registers and the Link Register (LR) to stack. After the prolog generation, the code cache is accessed and the next instruction is fetched. 
+	\par Then the decoding stage starts and the raw code is treated in order to get the opcode and operands of the fetched instruction. In the end of decode, it is pointed to the next instruction and the target code is generated. It is important to note that one decoded instruction may result in many more target instructions due to ISA incompatibility. 
+	\par At this point, if the instruction is a control flow instruction, the algorithm fetches another instruction, decodes it and generates the raw binary for the target again. If not, the epilog is generated and the used registers as well as the PC are poped from stack. After epilog the code is executed and goes to the begin of the algorithm.
+	\par This situation happens when the source PC does not have a Translation Cache entry. When this entry exists, the code address is accessed and set as "next to execute", then executed. The flowchart for this algorithm is presented on figure \ref{fig:flowchart-codeanalysis}.
+	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Images/flow-codeanalysis}
+		\caption{Translation algorithm.}
+		\label{fig:flowchart-codeanalysis}
+	\end{figure}	
+	
+	\par With this analysis it was possible to identify all the necessary components and its interfaces that will be later exposed in the reference architecture and to verify that the primary code needed to be refactored.
+
+	\par The code was also analyzed using the Understand software to prove that the refactor is needed so the code is in accordance with the reference architecture. The resulting graph is presented in figure \ref{fig:understand1}.
+	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Images/refactor.jpg}
+		\caption{First analysis done using the Understand software.}
+		\label{fig:understand1}
+	\end{figure}
 
 	\section{Code Refactoring}
 	
@@ -466,35 +494,217 @@
 		
 	\section{Code Generation}
 	
+	\newpage
+	
 	\section{Reference Architecture}
 	
-		\subsection{Source Cluster}
+	\par This section explains each of the reference architecture's component and its properties and interfaces. The name notation used indicates that all the references are started with \texttt{r\_} and all the services start with \texttt{s\_}.
+	\par The symbols notation is show in figure \ref{fig:caption}.
+	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.1\linewidth]{Images/arch-ref/caption}
+		\caption{Symbols used in the reference architecture model.}
+		\label{fig:caption}
+	\end{figure}
+
+	
+		\subsection{DBT}
 		
-			\subsubsection{Source Architecture}
+		\par The composite \texttt{DBT} includes all the other components and composites of the dynamic binary translator reference architecture. It references one service of \texttt{DBTEngine} -- \texttt{r\_Engine} -- and two references \texttt{r\_MemSizes} of the service \texttt{s\_MemSizes} of the architecture components. This top level also has one property called \texttt{measure} which is a boolean and activates/deactivates functions to measure the number of cycles that the program executes.
 		
-			\subsubsection{Source Environment}
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=1\linewidth]{Images/arch-ref/ref-arch}
+			\caption{Reference Architecture of a dynamic binary translator.}
+			\label{fig:ref-arch}
+		\end{figure}	
+	
+		\subsection{SourceCluster}
 		
-				\subsubsubsection{Data Memory}
+		\par The composite \texttt{SourceCluster} includes two components for source architecture and decoder -- \texttt{SourceArch} and \texttt{Decoder} -- and one composite for the source environment -- \texttt{SourceEnv}. It has no services, references or properties.
+		
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=0.6\linewidth]{Images/arch-ref/SourceCluster}
+			\caption{SourceCluster composite.}
+			\label{fig:SourceCluster}
+		\end{figure}
+		
+			\subsubsection{SourceArch}
+			
+			The component \texttt{SourceArch} contains the necessary information about the source architecture. It only offers services -- \texttt{s\_MemSizes} that include the external, internal and data memory sizes as well the heap and stack sizes, \texttt{s\_Registers} that informs about the architecture registers and \texttt{r\_ISA} that includes the functions to get the word size, get the PC size and get the number of bits of the opcode. It does not contains properties.
+			
+			\begin{figure} [H]
+				\centering
+				\includegraphics[width=0.25\linewidth]{Images/arch-ref/SourceArch}
+				\caption{SourceArch component.}
+				\label{fig:SourceArch}
+			\end{figure}
+		
+			\subsubsection{SourceEnv}
+			
+			\par The composite \texttt{SourceEnv} has one service -- \texttt{s\_SrcEnv} that is used to get and set the PC and reset the environment. It does not has references or properties.
+			
+			\begin{figure} [H]
+				\centering
+				\includegraphics[width=0.5\linewidth]{Images/arch-ref/SourceEnv}
+				\caption{SourceEnv composite.}
+				\label{fig:SourceEnv}
+			\end{figure}
+		
+				\subsubsubsection{DataMemory}
+				
+				\par \texttt{DataMemory} offers one service -- \texttt{r\_DMem} that allows the other components to read and write into data memory -- and one reference to the \texttt{s\_MemSizes} service from \texttt{SourceArch}. It has no properties.
+		
+				\begin{figure} [H]
+					\centering
+					\includegraphics[width=0.3\linewidth]{Images/arch-ref/DataMemory}
+					\caption{DataMemory component.}
+					\label{fig:DataMemory}
+				\end{figure}
 		
 			\subsubsection{Decoder}
+			
+			\par The component \texttt{Decoder} has six references -- \texttt{r\_ISA} to get the word and PC size and the number of bits of the opcode of the \texttt{SourceArch}, \texttt{r\_Registers} to get the register from \texttt{SourceArch}, \texttt{r\_SrcEnv} to get and set PC, \texttt{r\_CCache} to access the code stored into \texttt{CodeCache}, \texttt{r\_EngineState} from \texttt{DBTEngine} to access the pointers \texttt{eoBB} (end of Basic Block) and \texttt{EoExec} (end of Execution) and \texttt{r\_Generate} to call the functions provided by the \texttt{Generator} -- and one service -- \texttt{s\_Decode} that offers the decoding functions. It has one property \texttt{srcCodeTracing} to let the user decide if he wants to print the decoded instruction in serial port. This can be used as debug. 
+			
+			\begin{figure} [H]
+				\centering
+				\includegraphics[width=0.45\linewidth]{Images/arch-ref/Decoder}
+				\caption{Decoder component.}
+				\label{fig:Decoder}
+			\end{figure}			
 		
 		
-		\subsection{Target Cluster}
+		\subsection{TargetCluster}
 		
-			\subsubsection{Target Architecture}
+		\par The composite \texttt{TargetCluster} has two components -- \texttt{Generator} and \texttt{TragetArch}. It does not contains services, references or properties.
+		
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=0.6\linewidth]{Images/arch-ref/TargetCluster}
+			\caption{TargetCluster composite.}
+			\label{fig:TargetCluster}
+		\end{figure}
+		
+			\subsubsection{TargetArch}
+			
+			\par The \texttt{TargetArch} component includes the three services from target architecture -- \texttt{s\_ISA} to get word and PC size and to get number of bits from opcode, \texttt{s\_Registers} and \texttt{s\_MemSizes} the size of the memories, heap and stack. No properties and references exist in this component.
+			
+			\begin{figure} [H]
+				\centering
+				\includegraphics[width=0.25\linewidth]{Images/arch-ref/TargetArch}
+				\caption{TargetArch component.}
+				\label{fig:TargetArch}
+			\end{figure}
 		
 			\subsubsection{Generator}
 			
-		\subsection{Code Cache}
+			\par The \texttt{Generator} component is responsible for the code generation for target architecture. It has seven references -- \texttt{r\_DMem} to read from data memory, \texttt{r\_SrcEnv} to access PC, \texttt{r\_SrcRegisters} to get the registers from source architecture, \texttt{r\_TrgRegisters} to get the registers from target architecture, \texttt{r\_TCache} to store the generated instructions in Translation Cache, \texttt{r\_EngineState} to access the \texttt{eoBB} (end of Basic Block) and \texttt{eoExec} (end of execution) pointers and \texttt{r\_ISA} to get word and PC size as well as the number of bits from the opcode -- and one service -- \texttt{s\_Generate} is responsible for code generation. It also contains two properties -- \texttt{trgCodeTracing} to let the user decide if he wants to print the generated instructions in serial port and \texttt{optimizations} to activate the code generation optimizations.  
+			
+			\begin{figure} [H]
+				\centering
+				\includegraphics[width=0.35\linewidth]{Images/arch-ref/Generator}
+				\caption{Generator component.}
+				\label{fig:Generator}
+			\end{figure}
+			
+		\subsection{CodeCache}
 		
-		\subsection{Translation Cache}
+		\par The \texttt{CodeCache} stores the code to be translated. It has one reference -- \texttt{r\_ISA} to get word and PC size as well as the number of bits from the opcode -- and one service -- \texttt{s\_CCache} to provide the fetch and the load of instructions, add tags and get last and current translation address. The property \texttt{CCache\_Size} lets the user configure the cache size. 
 		
-		\subsection{DBT Engine}
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=0.3\linewidth]{Images/arch-ref/CodeCache}
+			\caption{CodeCache component.}
+			\label{fig:CodeCache}
+		\end{figure}
+		
+		\subsection{TranslationCache}
+		
+		\par The \texttt{TranslationCache} stores the translated code to be executed. It has one reference -- \texttt{r\_ISA} to get word and PC size as well as the number of bits from the opcode -- and one service -- \texttt{s\_TCache} to store the translated code, add tags and get last and current translation address. The property \texttt{CCache\_Size} lets the user configure the cache size. 
+		
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=0.3\linewidth]{Images/arch-ref/TranslationCache}
+			\caption{TranslationCache component.}
+			\label{fig:TranslationCache}
+		\end{figure}
+		
+		\subsection{DBTEngine}
+		
+		\par The composite \texttt{DBTEngine} contains the \texttt{Translator} and the \texttt{Executor} components. It references four services -- \texttt{r\_Translate} connected to a service from \texttt{Translator}, \texttt{s\_SrcEnv} that is used to get and set the PC and reset the environment, \texttt{s\_CCache} to fetch instructions, \texttt{r\_Execute} to bind to service from \texttt{Executor} and \texttt{r\_TCache} to access the translated code -- and three services -- \texttt{s\_Engine} to initialize and start the program, \texttt{s\_CurrBBExec} that points to the basic block being executed and \texttt{s\_EngineState} to access the pointers \texttt{eoBB} (end of Basic Block) and \texttt{EoExec} (end of Execution). It does not contains properties.
+		
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=0.7\linewidth]{Images/arch-ref/DBTEngine}
+			\caption{DBTEngine composite.}
+			\label{fig:DBTEngine}
+		\end{figure}
 		
 			\subsubsection{Translate}
+				
+			\begin{figure} [H]
+				\centering
+				\includegraphics[width=0.3\linewidth]{Images/arch-ref/Translator}
+				\caption{Translator component.}
+				\label{fig:Translator}
+			\end{figure}
 			
 			\subsubsection{Execute}
-	
+
+			\begin{figure} [H]
+				\centering
+				\includegraphics[width=0.3\linewidth]{Images/arch-ref/Executor}
+				\caption{Executor component.}
+				\label{fig:Executor}
+			\end{figure}
+			
+		\subsection{Interfaces}
+
+			\paragraph{i\_ISA}
+			
+			\begin{lstlisting}
+			interface i_ISA {
+				getWordSize	
+				PCSize
+				nBitsOpcode
+			}
+			\end{lstlisting} 
+			
+			\paragraph{i\_MemSizes}	
+			
+			\begin{lstlisting}
+			interface i_MemSizes{
+				xDataMemSize 	
+				DataMemSize 	
+				MemSize			
+				HeapSize			
+				StackSize		
+			}
+			\end{lstlisting} 	
+
+			\paragraph{i\_Registers}
+			
+			\paragraph{i\_SrcEnv}	
+			
+			\paragraph{i\_TCache}
+			
+			\paragraph{i\_DMem}
+			
+			\paragraph{i\_Decode}
+			
+			\paragraph{i\_Generate}
+			
+			\paragraph{i\_Translate}
+
+			\paragraph{i\_CurrBBExec}
+			
+			\paragraph{i\_Execute}
+			
+			\paragraph{i\_Engine}
+			
+			\paragraph{i\_EngineState}				
 
 	
 	\section{Test Plans}
@@ -507,15 +717,25 @@
 
 	\section{Elaboration Language Script}
 	
+	\par Explicar todo o processo para se escreverem scripts EL
+	
 	\section{Elaborations}
 	
+	\par Explicar todo o processo para se escreverem Elaborações
+	
 	\subsection{Annotations}
+	
+	\par Explicar todo o processo para se anotar
 	
 	\par Generator
 	
 	\par falar das outras também
 	
 	\section{Optimizations}
+	
+	\par Algoritmo
+	
+	\par Expor resultados
 	
 	\section{Results}
 	
