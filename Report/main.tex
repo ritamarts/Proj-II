@@ -18,13 +18,11 @@
 \usepackage{wrapfig}
 \usepackage{color}
 \usepackage{eurosym}
-%\usepackage{glossaries}
 \usepackage{subcaption}
 \usepackage{amsmath}
 \usepackage{titlesec}
 \usepackage{enumerate}
 \usepackage{listings}
-%\usepackage{filecontents}
 \usepackage{cite}
 \usepackage{float}
 
@@ -121,9 +119,6 @@
 \newpage
 %-------------------------------------------	
 \listoffigures
-\newpage
-%-------------------------------------------	
-\listoftables
 \newpage
 %-------------------------------------------	
 \section*{Abbreviations}
@@ -339,14 +334,173 @@
 		\par The 8051 offers five groups of instructions: arithmetic, branch, data transfer, logic and bit-oriented. Arithmetic instructions perform several tasks such as addition, subtraction, division and multiplication. Branch instructions can perform conditional and unconditional jumps. The main difference between them is that conditional jumps rely on the condition codes to verify if the branch is taken or not. Data transfer instructions move the content of one register to another. Logic instructions perform logic operations upon corresponding bits of two registers. Bit-oriented instructions are logic operations perform upon single bits\cite{mikroelektronika}.
 		\par The instructions size and format vary from 1 to 3 bytes to achieve the desired output. Even the same operation may vary in instruction size depending on the operands. Looking at the addition operation (\texttt{ADD}) case, when it is desired to add an immediate value to the accumulator (\texttt{ADD A, \#immediate}), 2 bytes are used. When it is desired to add the content of a register to the accumulator (\texttt{ADD A, Rn}), only 1 byte is used. This also means that the PC will be computed differently in accordance with the instruction size.
 		
-		\subsection{Target Architecture: ARMv7-M}
+		\subsection{Target Architecture: ARMv7-M \cite{armv7-m}}
 		
-		\par 
+		\par ARMv7 is documented as a set of architecture profiles. Three profiles have been defined as follows:
+		\begin{itemize}
+			\item ARMv7-A the application profile for systems supporting the ARM and Thumb instruction sets, and
+			requiring virtual address support in the memory management model.
+			\item ARMv7-R the realtime profile for systems supporting the ARM and Thumb instruction sets, and requiring physical address only support in the memory management model.
+			\item ARMv7-M the microcontroller profile for systems supporting only the Thumb instruction set, and where overall size and deterministic operation for an implementation are more important than absolute performance.
+		\end{itemize}
+		\par While profiles were formally introduced with the ARMv7 development, the A-profile and R-profile have implicitly existed in earlier versions, associated with the Virtual Memory System Architecture (VMSA) and Protected Memory System Architecture (PMSA) respectively. ARMv7-M only supports execution of Thumb instructions.
 		
-			\subsubsection{Thumb-2}
+		\par The introduction of Thumb-2 technology provided a balance to the ARM and Thumb instruction sets, and the opportunity for the ARM architecture to be extended into new markets, in particular the microcontroller marketplace. To take maximum advantage of this opportunity a Thumb-only profile with a new programmers’ model (a system level consideration) has been introduced as a unique profile, complementing ARM’s strengths in the high performance and real-time embedded markets.
+
+		\par ARMv7-M processors support the following data types in memory:
+		\begin{itemize}
+			\item Byte -- 8 bits
+			\item Halfword -- 16 bits
+			\item Word -- 32 bits
+		\end{itemize}
+		
+		\par Processor registers are 32 bits in size. The instruction set contains instructions supporting the following data
+		types held in registers:
+		\begin{itemize}
+			\item 32-bit pointers
+			\item unsigned or signed 32-bit integers
+			\item unsigned 16-bit or 8-bit integers, held in zero-extended form
+			\item signed 16-bit or 8-bit integers, held in sign-extended form
+			\item unsigned or signed 64-bit integers held in two registers.
+		\end{itemize}
+		\par Load and store operations can transfer bytes, halfwords, or words to and from memory. Loads of bytes or halfwords zero-extend or sign-extend the data as it is loaded, as specified in the appropriate load instruction.
+		\par The instruction sets include load and store operations that transfer two or more words to and from memory. You can load and store 64-bit integers using these instructions.
+		\par When any of the data types is described as unsigned, the N-bit data value represents a non-negative integer in the range 0 to 2 N -1, using normal binary format.
+		\par When any of these types is described as signed, the N-bit data value represents an integer in the range -2 N-1 to +2 N-1 -1, using two's complement format.
+		\par Direct instruction support for 64-bit integers is limited, and most 64-bit operations require sequences of two or more instructions to synthesize them.
+		
+		\paragraph{Integer arithmetic} The instruction set provides a wide variety of operations on the values in registers, including bitwise logical operations, shifts, additions, subtractions, multiplications, and many others. These operations are defined using pseudocode, usually in one of three ways:
+		\begin{itemize}
+			\item By direct use of the pseudocode operators and built-in functions defined in Operators and built-in functions.
+			\item By use of pseudocode helper functions defined in the main text.
+			\item By a sequence of the form:
+			\begin{itemize}
+				\item Use of the SInt(), UInt(), and Int() built-in functions to convert the bitstring contents of the instruction operands to the unbounded integers that they represent as two's complement or unsigned integers.
+				\item Use of mathematical operators, built-in functions and helper functions on those unbounded integers to calculate other such integers.
+				\item Use of either the bitstring extraction operator or of the saturation helper functions of saturation to convert an unbounded integer result into a bitstring result that can be written to a register.
+			\end{itemize}
+		\end{itemize}
+		
+		\paragraph{Shift and rotate operations} The following types of shift and rotate operations are used in instructions:
+		\begin{itemize}
+			\item Logical Shift Left (LSL) moves each bit of a bitstring left by a specified number of bits. Zeros are shifted in at the right end of the bitstring. Bits that are shifted off the left end of the bitstring are discarded, except that the last such bit can be produced as a carry output.
+			\item Logical Shift Right (LSR) moves each bit of a bitstring right by a specified number of bits. Zeros are shifted in at the left end of the bitstring. Bits that are shifted off the right end of the bitstring are discarded, except that the last such bit can be produced as a carry output.
+			\item Arithmetic Shift Right (ASR) moves each bit of a bitstring right by a specified number of bits. Copies of the leftmost bit are shifted in at the left end of the bitstring. Bits that are shifted off the right end of the bitstring are discarded, except that the last such bit can be produced as a carry output.
+			\item Rotate Right (ROR) moves each bit of a bitstring right by a specified number of bits. Each bit that is shifted off the right end of the bitstring is re-introduced at the left end. The last bit shifted off the the right end of the bitstring can be produced as a carry output.
+			\item Rotate Right with Extend (RRX) moves each bit of a bitstring right by one bit. The carry input is shifted in at the left end of the bitstring. The bit shifted off the right end of the bitstring can be produced as a carry output.
+		\end{itemize}
+		
+		\paragraph{Registers and execution state} The application level programmers’ model provides details of the general-purpose and special-purpose registers visible to the application programmer, the ARM memory model, and the instruction set used to load registers from memory, store registers to memory, or manipulate data (data operations) within the registers.
+		\par Applications often interact with external events. A summary of the types of events recognized in the architecture, along with the mechanisms provided in the architecture to interact with events, is included in Exceptions, faults and interrupts. 
+		
+		\subparagraph{ARM core registers} There are thirteen general-purpose 32-bit registers (R0-R12), and an additional three 32-bit registers which have special names and usage models.
+		\par \textbf{SP stack pointer} (R13), used as a pointer to the active stack. This is preset to the top of the Main stack on
+		reset.
+		\par \textbf{LR link register} (R14), used to store a value (the Return Link) relating to the return address from a subroutine which is entered using a Branch with Link instruction. This register is set to an illegal value (all 1’s) on reset. The reset value will cause a fault condition to occur if a subroutine return call is attempted from it. The LR register is also updated on exception
+		entry.
+		\par \textbf{Note:} R14 can be used for other purposes when the register is not required to support a return from
+		a subroutine.
+		\par \textbf{PC program counter} is loaded with the Reset handler start address on reset.
+		
+		\paragraph{Application Program Status Register (APSR)} The Application Program Status Register (APSR) Program status is reported in the 32-bit Application Program Status Register (APSR), where the defined bits break down into a set of flags.
+		APSR bit fields are in the following two categories:
+		\begin{itemize}
+			\item Reserved bits are allocated to system features or are available for future expansion. Further information on currently allocated reserved bits is available in The special-purpose program status registers (xPSR) on page B1-8. Application level software must ignore values read from reserved bits, and preserve their value on a write. The bits are defined as UNK/SBZP.
+			\item Flags that can be set by many instructions:
+			\begin{itemize}
+				\item N, bit [31]: Negative condition code flag. Set to bit [31] of the result of the instruction. If the result is regarded as a two's complement signed integer, then N == 1 if the result is negative and N = 0 if it is positive or zero.
+				\item Z, bit [30]: Zero condition code flag. Set to 1 if the result of the instruction is zero, and to 0 otherwise.
+				A result of zero often indicates an equal result from a comparison.
+				\item C, bit [29]: Carry condition code flag. Set to 1 if the instruction results in a carry condition, for
+				example an unsigned overflow on an addition.
+				\item V, bit [28] Overflow condition code flag. Set to 1 if the instruction results in an overflow condition,		for example a signed overflow on an addition.
+				\item Q, bit [27]: Set to 1 if an SSAT or USAT instruction changes (saturates) the input value for the signed or unsigned range of the result.
+			\end{itemize}
+		\end{itemize}
+			
+			\subsubsection{Thumb instruction set encoding}
+			\par The Thumb instruction stream is a sequence of halfword-aligned halfwords. Each Thumb instruction is either a single 16-bit halfword in that stream, or a 32-bit instruction consisting of two consecutive halfwords	in that stream.
+			If bits [15:11] of the halfword being decoded take any of the following values, the halfword is the first	halfword of a 32-bit instruction:
+			\begin{itemize}
+				\item 0b11101,
+				\item 0b11110,
+				\item 0b11111.
+			\end{itemize}
+			\par Otherwise, the halfword is a 16-bit instruction.
+			
+			
+			\paragraph{16-bit Thumb instruction encoding} Table \ref{tab:thumb16} shows the allocation of 16-bit instruction encodings.
+			
+			\begin{figure} [H]
+				\centering
+				\includegraphics[width=0.5\linewidth]{Images/thumb16}
+				\caption{Instruction encoding.}
+				\label{fig:thumb16}
+			\end{figure}
+			
+			\begin{table}[H]
+				\centering
+				\caption{16-bit Thumb instruction encoding.}
+				\label{tab:thumb16}
+				\begin{tabular}{l|l}
+					\hline 
+					\textbf{opcode} & \textbf{Instruction or instruction class} \\ \hline
+					00xxxx & Shift (immediate), add, subtract, move, and compare \\
+					010000 & Data processing \\
+					010001 & Special data instructions and branch and exchange \\
+					01001x & Load from Literal Pool \\
+					0101xx & \multirow{3}{*}{Load/store single data item} \\
+					011xxx &  \\
+					100xxx &  \\
+					10100x & Generate PC-relative address \\
+					10101x & Generate SP-relative address \\
+					1011xx & Miscellaneous 16-bit instructions \\
+					11000x & Store multiple registers \\
+					11001x & Load multiple registers \\
+					1101xx & Conditional branch, and supervisor call \\
+					11100x & Unconditional Branch \\
+					\hline
+				\end{tabular}
+			\end{table}
+			
+		\paragraph{32-bit Thumb instruction encoding} Table \ref{tab:thumb32} shows the allocation of ARMv7-M Thumb encodings in this space. op1 != 0b00. If op1 == 0b00, a 16-bit instruction is encoded.
+		
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=0.95\linewidth]{Images/thumb32}
+			\caption{Instruction encoding.}
+			\label{fig:thumb32}
+		\end{figure}
+
+			\begin{table}[H]
+				\centering
+				\caption{32-bit Thumb instruction encoding.}
+				\label{tab:thumb32}
+				\begin{tabular}{l|l|l|l}
+					\hline 
+					\textbf{op1} & \textbf{op2} & \textbf{op} & \textbf{Instruction class} \\ \hline
+					01 & 00xx 0xx & x & Load/store multiple \\
+					01 & 00xx 1xx & x & Load/store dual or exclusive, table branch \\
+					01 & 01xx xxx & x & Data processing (shifted register) \\
+					01 & 1xxx xxx & x & Coprocessor instructions \\
+					10 & x0xx xxx & 0 & Data processing (modified immediate) \\
+					10 & x1xx xxx & 0 & Data processing (plain binary immediate)  \\
+					10 & xxxx xxx & 1 & Branches and miscellaneous control  \\
+					11 & 000x xx0 & x & Store single data item \\
+					11 & 00xx 001 & x & Load byte, memory hints \\
+					11 & 00xx 011 & x & Load halfword, unallocated memory hints \\
+					11 & 00xx 101 & x & Load word \\
+					11 & 00xx 111 & x & UNDEFINED \\
+					11 & 010x xxx & x & Data processing (register) \\
+					11 & 0110 xxx & x & Multiply, and multiply accumulate\\
+					11 & 0111 xxx & x & Long multiply, long multiply accumulate, and divide \\
+					11 & 1xxx xxx & x & Coprocessor instructions \\
+					\hline
+				\end{tabular}
+			\end{table}
+		
 			
 	\subsection{Architectural Model}
-	
 	\par Figure \ref{fig:block} represents the model of the DBT engine. The execution flows as followed: a source code is loaded into a source code cache. This cache exists so that only the basic block that is being worked is loaded into RAM memory for quicker access. The DBT engine accesses the source code cache and translates the basic block which is then stored into Translation Cache. The code stored into this cache is native code for the target and ready to execute\cite{f.salgadoj.mendesa.tavaresm.ekpanyapong}.
 		
 	\begin{figure} [H]
