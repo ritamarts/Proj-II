@@ -307,9 +307,31 @@
 
 		\paragraph{Generation} After completing all the steps above, the User can execute the Elaborator and generate the new source code. The Elaborator uses all the elaborations necessary to create the code.
 		
-		\subsection{Elaboration API}
+		\subsection{AbstractElaborator API}
 		
-		\par elaboration api
+		\par The AbstractElaborator API lets the user easily configure the final files. Inside the ELPackage exists one Elaboration directory that contains the elaborations and the final files are generated in another folder in the same package.
+		\par This API is composed by an abstract class named \texttt{AbstractElaborator} that implements the interface \texttt{Elaborator} and offers the base to all the other elaborations.
+		\par It allows the association of annotated files with the respective elaboration using the function \texttt{openAnnotatedSource}. This function opens the file so it is possible to replace the annotations in that file with strings. When it is desired to work in another file, it is just necessary to use the same function targeting another source file. When two elaborations need to work in the same file, the function to use is \texttt{openAnnotatedSharedSource}. Bellow it is shown the functions prototypes that can be used with this API.
+		
+		\begin{lstlisting}[language=Java]
+			//Open file
+			public void openAnnotatedSource (String sourcepath)
+			//Open file and specify generated file folder
+			public void openAnnotatedSource (String sourcepath, String targetPath)
+			//Open file shared with various elaborations
+			public void openAnnotatedSharedSource (String sourcepath)
+		\end{lstlisting}
+		
+		\par After opening the file, the \texttt{replaceAnnotation} method can be used to associate annotations with an elaborator and the source file. It is possible to replace an annotation targeting another file and not the one opened before. There are four methods that provide annotation replacement which are presented bellow.
+		
+		\begin{lstlisting}[language=Java]
+		//Replace "anotation" with the "config" value		
+		public void replaceAnotation (String anotation, String config)
+		//Replace "anotation" with the "config" value in "targetfile"
+		public void replaceAnotation(String anotation, String config, String targetfile)
+		\end{lstlisting}
+		
+		\par 		
 		
 		\subsection{Configuration Files}
 		
