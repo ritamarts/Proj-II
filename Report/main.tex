@@ -121,6 +121,9 @@
 \listoffigures
 \newpage
 %-------------------------------------------	
+\listoftables
+\newpage
+%-------------------------------------------
 \section*{Abbreviations}
 %please put in alfabetical order
 \begin{abbreviations} 
@@ -220,93 +223,159 @@
 		
 			\subparagraph{Implementation} Code block implemented in a programming language.
 		
-		\subsection{Elaboration Language}
+	\section{Elaboration Language}
+	
+	\par Elaboration Language (EL) was the DSL developed by a group of students to create models, and was written using the Eclipse frameworks Xtext and Xtend. Xtext is necessary for specifying the grammar and all the other features were written using Xtend. 
+	\par EL follows the Service Component Architecture specification in which everything is composed by components. The components are related through services and references to that services. 
+
+		\subsection{Keywords}
 		
-		\par Elaboration Language (EL) was the DSL developed by a group of students to create models, and was written using the Eclipse frameworks Xtext and Xtend. Xtext is necessary for specifying the grammar and all the other features were written using Xtend. 
-		\par EL follows the Service Component Architecture specification in which everything is composed by components. The components are related through services and references to that services. 
-		\par It is necessary to follow a work flow when using this DSL to create the necessary artifacts. Next the correct work flow is explained.
-
-			\subsubsection{Work Flow}
 		
-			\par To develop and use a reference architecture there must be followed a work flow, composed by four steps: modeling, elaboration, configuration and generation. Each step provides the artifacts necessary for the subjacent step.
-			
-			\begin{figure} [H]
-				\centering
-				\includegraphics[width=1\linewidth]{Images/workflow}
-				\caption{EL Workflow.}
-				\label{fig:workflow}
-			\end{figure}
-		
-			\paragraph{Modeling} The first step consists in designing the reference architecture and, after that, writing the respective EL scripts. In some cases it is necessary to make code refactoring to keep the code in concordance with the model. It is also necessary to annotate the source files so the elaborations can replace these same annotations for literal values or expressions.
-
-			\paragraph{Elaboration} In this step are constructed Java classes to alter the code with annotations provided by the user. After the system modeling and writing all the elaboration, it is created a Java program called \textbf{Elaborator}. This program understands the complete model.
-
-			\paragraph{Configuration} At compilation time there are generated XML files with the configuration of the reference architecture components. The User can alter these files and by that configure properties values, arrays sizes ou change which elaboration will modify the source code.
-
-			\paragraph{Generation} After completing all the steps above, the User can execute the Elaborator and generate the new source code. The Elaborator uses all the elaborations necessary to create the code.
-			
-			\subsubsection{Syntax and Semantics}
-			
-			\par It is essential to any language to be easily understandable. In the EL context it is necessary to understand how is it possible to express the service-based models.
-			\par To a better understanding it is exposed a simple model with two components in which one offers a service to another, represented in figure \ref{fig:example-diagram}.
-			
-			\begin{figure} [H]
-				\centering
-				\includegraphics[width=0.5\linewidth]{Images/diagram}
-				\caption{Example diagram.}
-				\label{fig:example-diagram}
-			\end{figure}
-			
-			\par The example diagram shows an EL model, in which the \texttt{Composite} is the component from where the model is generated. In the code this is represented by the expression \texttt{compile Composite}. It is defined a \texttt{language} and both components should follow it. In the \texttt{language} definition it is indicated the annotation symbol to be used by the elaborations later. An \texttt{interface} is created with all the functions that component \texttt{C\_B} provides as services. The component \texttt{C\_A} has one property \texttt{P\_A} of the type \texttt{int} and one reference \texttt{R\_A} to the service of the other component, so this reference must follow the same interface as the respective service from \texttt{C\_B}. The component \texttt{C\_B} offers a service \texttt{S\_B} and has a property \texttt{P\_B} of the type \texttt{string} with the default value text. Finally it is declared the component \texttt{Composite} that contains the two components described above and the \texttt{bind} of the reference \texttt{R\_A} to the service \texttt{S\_B}.
-			
-			\begin{lstlisting}
-			compile Composite
-
-			language C {
-				annotation: "@"
-			}
-			
-			interface Interface {
-				func1 func2
-			}
-			
-			component C_A (C) {
-				properties:
-					int P_A
-				references:
-					Interface R_A
-			}
-			
-			component C_B (C) {
-				properties:
-					string P_B : "text"
-				services:
-					Interface S_B
-			}
-			
-			component Composite (C) {
-				subcomponents:
-					C_A a
-					C_B b
+		\begin{table}[H]
+			\centering
+			\caption{EL languages keywords.}
+			\label{tab:keywords}
+			\begin{tabular}{l|l}
+				\hline 
+				\textbf{Keyword} & \textbf{Description} \\
+				\hline
+				annotation & Defines the character that limits the annotations in the source code \\
 				
-				bind a.R_A to b.S_B
-			}
-			\end{lstlisting} 
+				as & Rename a promoted reference or service (promote ... as ...)\\
+				
+				bind & Binds a reference to a service (bind ... to ...)\\
+				
+				bool & Property data type (boolean)\\
+				
+				compile & Indicates the top level component to compiler\\
+				
+				component & Defines a component \\
+				
+				final & Indicates that a component has a concrete elaboration \\
+				
+				import & Imports the content of a file \\
+				
+				int & Property data type (integer) \\
+				
+				interface & Defines a set of functions used by a service \\
+				
+				is & Inherits from the specified component \\
+				
+				float & Property data type (float) \\
+				
+				language & Definition of a language \\
+				
+				promote & Promotes a reference or service from a subcomponent to a component \\
+				
+				properties: & Defines the properties of a component \\
+				
+				reference & Defines the reference used in a promote (promote reference ...)\\
+				
+				references: & Defines the references of a component \\
+				
+				restrict & Restriction of the values that a property can have \\
+				
+				service & Defines the service used in a promote (promote service ...)\\
+				
+				services: & Defines the services of a component \\
+				
+				string & Property data type (string) \\
+				
+				subcomponents: & Defines the subcomponents of a component \\
+				
+				to & Connects a reference to a service in a bind operation (bind ... to ...)\\
+				\hline
+			\end{tabular}
+		\end{table}
 
-			\subsubsection{Use Cases}
-			
-			\par Two actors, the designer and the user, can interact with the languages artifacts. The user differentiates
-			from the designer to the extent that not possess the technical skills to design a reference architecture.
-			\par The \textbf{designer} is responsible for writing the elaboration files and the EL model design. The \textbf{user} is only responsible for the configuration of properties, if they exist and the Elaborator execution.
-			
-			\begin{figure} [H]
-				\centering
-				\includegraphics[width=0.4\linewidth]{Images/use-cases}
-				\caption{Example diagram.}
-				\label{fig:use-cases}
-			\end{figure}			
-			
+		\subsection{Work Flow}
+	
+		\par To develop and use a reference architecture there must be followed a work flow, composed by four steps: modeling, elaboration, configuration and generation. Each step provides the artifacts necessary for the subjacent step.
+		
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=1\linewidth]{Images/workflow}
+			\caption{EL Workflow.}
+			\label{fig:workflow}
+		\end{figure}
+	
+		\paragraph{Modeling} The first step consists in designing the reference architecture and, after that, writing the respective EL scripts. In some cases it is necessary to make code refactoring to keep the code in concordance with the model. It is also necessary to annotate the source files so the elaborations can replace these same annotations for literal values or expressions.
 
+		\paragraph{Elaboration} In this step are constructed Java classes to alter the code with annotations provided by the user. After the system modeling and writing all the elaboration, it is created a Java program called \textbf{Elaborator}. This program understands the complete model.
+
+		\paragraph{Configuration} At compilation time there are generated XML files with the configuration of the reference architecture components. The User can alter these files and by that configure properties values, arrays sizes ou change which elaboration will modify the source code.
+
+		\paragraph{Generation} After completing all the steps above, the User can execute the Elaborator and generate the new source code. The Elaborator uses all the elaborations necessary to create the code.
+		
+		\subsection{Elaboration API}
+		
+		\par elaboration api
+		
+		\subsection{Configuration Files}
+		
+		\par xml
+		
+		\subsection{Use Cases}
+		
+		\par Two actors, the designer and the user, can interact with the languages artifacts. The user differentiates
+		from the designer to the extent that not possess the technical skills to design a reference architecture.
+		\par The \textbf{designer} is responsible for writing the elaboration files and the EL model design. The \textbf{user} is only responsible for the configuration of properties, if they exist and the Elaborator execution.
+		
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=0.4\linewidth]{Images/use-cases}
+			\caption{Example diagram.}
+			\label{fig:use-cases}
+		\end{figure}
+		
+		\subsection{Syntax and Semantics}
+		
+		\par It is essential to any language to be easily understandable. In the EL context it is necessary to understand how is it possible to express the service-based models.
+		\par To a better understanding it is exposed a simple model with two components in which one offers a service to another, represented in figure \ref{fig:example-diagram}.
+		
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=0.5\linewidth]{Images/diagram}
+			\caption{Example diagram.}
+			\label{fig:example-diagram}
+		\end{figure}
+		
+		\par The example diagram shows an EL model, in which the \texttt{Composite} is the component from where the model is generated. In the code this is represented by the expression \texttt{compile Composite}. It is defined a \texttt{language} and both components should follow it. In the \texttt{language} definition it is indicated the annotation symbol to be used by the elaborations later. An \texttt{interface} is created with all the functions that component \texttt{C\_B} provides as services. The component \texttt{C\_A} has one property \texttt{P\_A} of the type \texttt{int} and one reference \texttt{R\_A} to the service of the other component, so this reference must follow the same interface as the respective service from \texttt{C\_B}. The component \texttt{C\_B} offers a service \texttt{S\_B} and has a property \texttt{P\_B} of the type \texttt{string} with the default value text. Finally it is declared the component \texttt{Composite} that contains the two components described above and the \texttt{bind} of the reference \texttt{R\_A} to the service \texttt{S\_B}.
+		
+		\begin{lstlisting}
+		compile Composite
+
+		language C {
+			annotation: "@"
+		}
+		
+		interface Interface {
+			func1 func2
+		}
+		
+		component C_A (C) {
+			properties:
+				int P_A
+			references:
+				Interface R_A
+		}
+		
+		component C_B (C) {
+			properties:
+				string P_B : "text"
+			services:
+				Interface S_B
+		}
+		
+		component Composite (C) {
+			subcomponents:
+				C_A a
+				C_B b
+			
+			bind a.R_A to b.S_B
+		}
+		\end{lstlisting} 			
+			
 	\section{Dynamic Binary Translation}
 	\par Binary translation is the process of converting code for one ISA architecture to code for another. There are two types of binary translation: static and dynamic. The main difference between the two approaches is that the static translation translates the entire program before the execution and dynamic translation translates code on demand. This allows the dynamic binary translation (DBT) to deal with challenges that static binary translation do not suffice \cite{b.hawkingsb.demskyd.brueningq.zhao2015}. 
 	\par In this project was used a dynamic binary translation to create the model. It translates one basic block at a time and then executes it. The translated code, as well as the source code, is cached so if one basic block is stored into the translation cache, the cache returns an hit and it is not necessary to translate it again. 
@@ -580,6 +649,14 @@
 	\par The third task is the implementation of the reference architecture in the framework and the code refactoring so it will fit the model. 
 	\par The fourth task is writing the correspondent EL scripts, annotate the source code and write the elaborations. This will make the code configurable.
 	\par It will also be necessary to prepare all the presentations, reports and poster in the project domain.
+	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=1\linewidth]{Images/gantt}
+		\caption{Gantt's Diagram.}
+		\label{fig:gantt}
+	\end{figure}
+	
 
 
 %END ANALYSIS CHAPTER
@@ -848,8 +925,17 @@
 			\end{figure}
 			
 		\subsection{Interfaces}
+		
+		\par The interfaces make possible for components to connect between each other. To connect two components, one most have one reference of a given interface and the other must have a service of the same interface.
 
 			\subsubsection*{i\_ISA}
+			
+			\par The \texttt{i\_ISA} interface has three functions:
+			\begin{itemize}
+				\item getWordSize -- the word size is a characteristic of the architecture and it's necessary to encode the instructions correctly,
+				\item PCSize -- the Program Counter size may be different of the word size, so this function is also necessary for the correct encoding,
+				\item nBitsOpcode -- the number of bit of the opcode may vary. Looking at the Thumb specification, the opcode size is different when using the 16-bit and 32-bit encoding. 
+			\end{itemize}
 			
 			\begin{lstlisting}
 			interface i_ISA {
@@ -860,6 +946,15 @@
 			\end{lstlisting} 
 			
 			\subsubsection*{i\_MemSizes}	
+			
+			\par The \texttt{i\_MEMSizes} interface has five functions:
+			\begin{itemize}
+				\item xDataMemSize -- indicates the size of the external data memory,
+				\item DataMemSize -- indicates the size of the internal data memory,
+				\item MemSize -- indicates the size of the code memory,
+				\item HeapSize -- indicates the size of the heap,
+				\item StackSize -- indicates teh size of the stack.
+			\end{itemize}
 			
 			\begin{lstlisting}
 			interface i_MemSizes{
@@ -873,12 +968,21 @@
 
 			\subsubsection*{i\_Registers}
 			
+			\par The \texttt{i\_Registers} interface does not have functions associated, but it should return the available registers for a given architecture.
+			
 			\begin{lstlisting}
 			interface i_Registers {
 			}
 			\end{lstlisting}
 			
 			\subsubsection*{i\_SrcEnv}	
+			
+			\par The \texttt{i\_SrcEnv} interface has three functions:
+			\begin{itemize}
+				\item getPC -- to get the value stored in the Program Counter,
+				\item setPC -- to set the value of the Program Counter,
+				\item envReset -- to reset the environment.
+			\end{itemize}
 			
 			\begin{lstlisting}
 			interface i_SrcEnv {
@@ -889,6 +993,15 @@
 			\end{lstlisting}
 			
 			\subsubsection*{i\_TCache}
+			
+			\par The \texttt{i\_TCache} interface has five functions:
+			\begin{itemize}
+				\item addTag -- add a tag to a given instruction,
+				\item getTransAddr -- get the translated instruction address,
+				\item getLastTransAddr -- get the last translated instruction address, 
+				\item getCurrInsAddr -- get the current instruction address,
+				\item cacheCode -- stores the code into cache.
+			\end{itemize}
 		
 			\begin{lstlisting}
 			interface i_TCache {
@@ -902,6 +1015,12 @@
 			
 			\subsubsection*{i\_CCache}
 			
+			\par The \texttt{i\_CCache} interface has two functions:
+			\begin{itemize}
+				\item fetch -- to retrieve the instruction address from code cache,
+				\item load -- to load code to translate from code cache.
+			\end{itemize}
+			
 			\begin{lstlisting}
 			interface i_CCache {
 				fetch	
@@ -910,6 +1029,12 @@
 			\end{lstlisting}
 			
 			\subsubsection*{i\_DMem}
+			
+			\par The \texttt{i\_DMem} interface has two functions:
+			\begin{itemize}
+				\item readDataMemory -- to read data from data memory,
+				\item writeDataMemory -- to write data into data memory.
+			\end{itemize}
 			
 			\begin{lstlisting}
 			interface i_DMem {
@@ -920,13 +1045,20 @@
 			
 			\subsubsection*{i\_Decode}
 			
+			\par The \texttt{i\_Decode} interface has one function:
+			\begin{itemize}
+				\item decode -- to use the instruction decoding functions.
+			\end{itemize}
+			
 			\begin{lstlisting}
 			interface i_Decode {
 				decode 
 			}
 			\end{lstlisting}	
-			
+					
 			\subsubsection*{i\_Generate}
+			
+			\par The \texttt{i\_Generate} interface has fourty eight functions. All of its purposes is to generate binary code for the target architecture.
 			
 			\begin{lstlisting}
 			interface i_Generate {
@@ -954,11 +1086,16 @@
 				gen_xor
 				gen_shri 	gen_shli
 				gen_orShl
-				gen_prolog gen_epilog
+				gen_prolog  gen_epilog
 			}
 			\end{lstlisting}
 			
 			\subsubsection*{i\_Translate}
+			
+			\par The interface \texttt{i\_Translate} has one function:
+			\begin{itemize}
+				\item translate -- to translate the source code. It is not the same as decode or generate code.
+			\end{itemize}
 			
 			\begin{lstlisting}
 			interface i_Translate{
@@ -968,6 +1105,11 @@
 
 			\subsubsection*{i\_CurrBBExec}
 			
+			\par The interface \texttt{i\_CurrBBExec} has one function:
+			\begin{itemize}
+				\item currBBExecPtr -- to access the pointer to the current basic block being executed.
+			\end{itemize}
+			
 			\begin{lstlisting}
 			interface i_CurrBBExec{
 				currBBExecPtr
@@ -975,6 +1117,11 @@
 			\end{lstlisting}
 			
 			\subsubsection*{i\_Execute}
+			
+			\par The interface \texttt{i\_Execute} has one function:
+			\begin{itemize}
+				\item execute -- to execute the translate code into the target machine.
+			\end{itemize}
 			
 			\begin{lstlisting}
 			interface i_Execute{
@@ -984,6 +1131,12 @@
 			
 			\subsubsection*{i\_Engine}
 			
+			\par The interface \texttt{i\_Engine} has two functions:
+			\begin{itemize}
+				\item initTranslator -- to initialize the translator with code size and code location,
+				\item runDBT -- to initialize the translation and posterior execution.
+			\end{itemize}
+			
 			\begin{lstlisting}
 			interface i_Engine{
 				initTranslator
@@ -991,7 +1144,14 @@
 			}
 			\end{lstlisting}
 			
-			\subsubsection*{i\_EngineState}			
+			\subsubsection*{i\_EngineState}		
+			
+			\par The interface \texttt{i\_EngineState} has three functions:
+			\begin{itemize}
+				\item eoBB -- access the pointer to the end of basic block,
+				\item eoExec -- access the pointer to the end of execution,
+				\item pSourceProgMem -- to access the source program memory.
+			\end{itemize}	
 			
 			\begin{lstlisting}
 			interface i_EngineState{
