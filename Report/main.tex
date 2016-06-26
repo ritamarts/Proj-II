@@ -465,48 +465,63 @@
 	\end{figure}
 
 	\section{Code Refactoring}
+	Code refactoring is the process of reorganizing and restructuring existing code in source files without changing its external behavior. To keep the behavior there are some decisions that need to be made that may introduce overhead in the computation time, which is unwanted in an embedded system. That is why the overhead introduced by refactoring should be as minimal as possible.
+	
+	Code Refactoring can make improvements in code or simply make the code easier to read and understand.
+	In our case, the objective of code refactoring is to make it easier to model. This objective can improve also the maintainability because the code will be more readable. The objectives are conceived by dividing the code in different sources and classes, with which one representing a key part of the DBT.
+	
+	In the initial code there is not much divide. The part of code responsible for decoding the operands is in the same file that the part that is responsible of generating the code. So the division of the code will create new classes to make a separation from the code that is related to the source architecture and the decoding of instructions from the source architecture, to the code that is related to the target architecture and the generating of code to that architecture.
+	This refactoring and separation will improve the process of switching from architecture to another. This is accomplished because the designer doesn't need to alter a complex file with all the functions of target and source architecture, but only the file with the specific functions. 
+	
+	The changes in code are described in next paragraphs:
 	
 	\paragraph{main.cpp}
+	In the file texttt{main.cpp}, it's only needed to rearrange the calls to the methods from the main class because in the initial code, the classes had the same names as after refactoring.
 	
-	\paragraph{CBuffer.cpp}
+	\paragraph{DBTEngine}
+	The translator class was renamed texttt{CDBTEngine} because is the core class of the DBT that initializes and starts the translation. 
 	
-	\paragraph{CBuffer.h}
+	\paragraph{CBuffer}
+	The only change in this file was to add the macro texttt{fetch} to it. The macro textt{fetch} was previously in the class translator that was the class that had methods to start and initialize the translation. The macro gives access to the content of the Code Buffer so it makes more sense to be defined in texttt{CBuffer}, that is were the Code Bufeer is initialize and is load with code.
 	
-	\paragraph{DBTEngine.cpp}
+	\paragraph{TransBuffer}
+	Some minor change was done in the TransBuffer Class to be in accord with the the other classes.
 	
-	\paragraph{DBTEngine.h}
+	\paragraph{SourceArchitecture}
+	The Class Source Architecture was introduced to separate the decoder part from the generator part. It is a  class with all the methods that decode should implement.
 	
-	\paragraph{SourceArch\_8051.cpp}
+	\paragraph{SourceArch\_8051}
+	SourceArch\_8051 Class is the specific class that decodes instructions from the 8051. This is the Class that the designer needs to change if we wants to switch architecture.  
 	
-	\paragraph{SourceArch\_8051.h}
+	\paragraph{TargetArchitecture}
+	The Class Target Architecture is a abstract class with the methods responsible for code generation. It has all the methods as virtual to be implemented in the derivate class that is specific to an Architecture.
 	
-	\paragraph{SourceArchitecture.cpp}
+	\paragraph{TargetArch\_CortexM3}
+	TargetArch\_CortexM3 Class is where the Generator methods are implemented and is this file that should be alter if we switch to another architecture.  
 	
-	\paragraph{SourceArchitecture.h}
+	\paragraph{Defines}
+	The defines were separated in different files. The defines concerning the Source Architecture were put in the file texttt{SourceDefines.h} and those defines that were related to the Target Architecture in the file texttt{TargetDefines.h}. The file texttt{types.h} continues to exist with only the global defines.
 	
-	\paragraph{TargetArch\_CortexM3.cpp}
+	The next figure (Figure \ref{fig:understand1}) shows the relations and the division of the classes.
 	
-	\paragraph{TargetArch\_CortexM3.h}
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=1\linewidth]{Images/code_refactoring}
+		\caption{Code Refactoring.}
+		\label{fig:refactoring}
+	\end{figure}	
 	
-	\paragraph{TargetArchitecture.cpp}
 	
-	\paragraph{TargetArchitecture.h}
-	
-	\paragraph{TransBuffer.cpp}
-	
-	\paragraph{TransBuffer.h}
-	
-	\paragraph{Translator.cpp}
-	
-	\paragraph{Translator.h}
-	
-	\paragraph{Translator8051.cpp}
-	
-	\paragraph{Translator8051.h}
-	
-	\paragraph{types.h}
-		
 	\section{Code Generation}
+	The Code Generation is the last stage of translation of code in the DBT. After decoding the source instruction, code generation is call to generate code that follows Target Instruction Set Architecture. The behavior of instructions is reproduced through an Intermediate Representation. The use of an Intermediate Representation provides advantages in increased abstraction and add the possibility of retargeting.
+	
+	In this project the Intermediate Representation is defined as set of functions that should be redefined for each target Instruction Set Architecture. Each of this functions generate the corresponding code to the translation cache. This method is based on QEMU Tiny Code Generator.
+	
+%	\subsection{Tiny Code Generator}
+	Tiny Code Generator
+	
+%	\subsection{DBT Generator}	 
+
 	
 \newpage
 	
