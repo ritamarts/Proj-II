@@ -696,24 +696,34 @@
 	\end{figure}
 
 	\section{Code Refactoring}
-	Code refactoring is the process of reorganizing and restructuring existing code in source files without changing its external behavior. To keep the behavior there are some decisions that need to be made that may introduce overhead in the computation time, which is unwanted in an embedded system. That is why the overhead introduced by refactoring should be as minimal as possible.
+	Code refactoring is the process of reorganizing and restructuring of existing code in source files without changing its external behavior. To keep the behavior there are some decisions that need to be made that may introduce overhead in the computation time, which is unwanted in an embedded system. That is why the overhead introduced by refactoring should be as minimal as possible.
 	
 	Code Refactoring can make improvements in code or simply make the code easier to read and understand.
 	In our case, the objective of code refactoring is to make it easier to model. This objective can improve also the maintainability because the code will be more readable. The objectives are conceived by dividing the code in different sources and classes, with which one representing a key part of the DBT.
 	
-	In the initial code there is not much divide. The part of code responsible for decoding the operands is in the same file that the part that is responsible of generating the code. So the division of the code will create new classes to make a separation from the code that is related to the source architecture and the decoding of instructions from the source architecture, to the code that is related to the target architecture and the generating of code to that architecture.
-	This refactoring and separation will improve the process of switching from architecture to another. This is accomplished because the designer doesn't need to alter a complex file with all the functions of target and source architecture, but only the file with the specific functions. 
+	The original code hasn't many divisions. The part of code responsible for decoding the operands is done in the same file that the part that is responsible of generating the code. 
+	This is shown in the next diagram (Figure \ref{fig:uml1}).
+	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{Images/UMLDBT}
+		\caption{Class Diagram of DBT}
+		\label{fig:uml1}
+	\end{figure}
+	
+	The division of the code will create new classes, to make a separation from the code that is related to the source architecture and the decoding of instructions from the source architecture, to the code that is related to the target architecture and the generating of code to that architecture.
+	This refactoring and separation will improve the process of switching from architecture to another. This is accomplished because the designer doesn't need to alter complex file with all the functions of target and source architecture, but only the file with the specific functions. 
 	
 	The changes in code are described in next paragraphs:
 	
 	\paragraph{main.cpp}
-	In the file texttt{main.cpp}, it's only needed to rearrange the calls to the methods from the main class because in the initial code, the classes had the same names as after refactoring.
+	In the file \texttt{main.cpp}, it's only needed to rearrange the calls to the methods from the main class because in the initial code, the classes had the same names as after refactoring.
 	
 	\paragraph{DBTEngine}
-	The translator class was renamed texttt{CDBTEngine} because is the core class of the DBT that initializes and starts the translation. 
+	The translator class was renamed \texttt{CDBTEngine} because is the core class of the DBT that initializes and starts the translation. 
 	
 	\paragraph{CBuffer}
-	The only change in this file was to add the macro texttt{fetch} to it. The macro textt{fetch} was previously in the class translator that was the class that had methods to start and initialize the translation. The macro gives access to the content of the Code Buffer so it makes more sense to be defined in texttt{CBuffer}, that is were the Code Bufeer is initialize and is load with code.
+	The only change in this file was to add the macro \texttt{fetch} to it. The macro \texttt{fetch} was previously in the class translator that was the class that had methods to start and initialize the translation. The macro gives access to the content of the Code Buffer so it makes more sense to be defined in \texttt{CBuffer}, that is were the Code Bufeer is initialize and is load with code.
 	
 	\paragraph{TransBuffer}
 	Some minor change was done in the TransBuffer Class to be in accord with the the other classes.
@@ -731,14 +741,14 @@
 	TargetArch\_CortexM3 Class is where the Generator methods are implemented and is this file that should be alter if we switch to another architecture.  
 	
 	\paragraph{Defines}
-	The defines were separated in different files. The defines concerning the Source Architecture were put in the file texttt{SourceDefines.h} and those defines that were related to the Target Architecture in the file texttt{TargetDefines.h}. The file texttt{types.h} continues to exist with only the global defines.
+	The defines were separated in different files. The defines concerning the Source Architecture were put in the file \texttt{SourceDefines.h} and those defines that were related to the Target Architecture in the file \texttt{TargetDefines.h}. The file \texttt{types.h} continues to exist with only the global defines.
 	
-	The next figure (Figure \ref{fig:understand1}) shows the relations and the division of the classes.
+	The next figure (Figure \ref{fig:refactoring}) shows the relations and division of the classes.
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=1\linewidth]{Images/code_refactoring}
-		\caption{Code Refactoring.}
+		\includegraphics[width=0.9\linewidth]{Images/refactoringuml}
+		\caption{Code Refactoring Class Diagram.}
 		\label{fig:refactoring}
 	\end{figure}	
 	
@@ -746,16 +756,88 @@
 	\section{Code Generation}
 	The Code Generation is the last stage of translation of code in the DBT. After decoding the source instruction, code generation is call to generate code that follows Target Instruction Set Architecture. The behavior of instructions is reproduced through an Intermediate Representation. The use of an Intermediate Representation provides advantages in increased abstraction and add the possibility of retargeting.
 	
-	In this project the Intermediate Representation is defined as set of functions that should be redefined for each target Instruction Set Architecture. Each of this functions generate the corresponding code to the translation cache. This method is based on QEMU Tiny Code Generator.
+	In this project the Intermediate Representation is defined as set of functions that should be redefined for each target Instruction Set Architecture. This method is based on QEMU Tiny Code Generator. Each of this functions generate the corresponding code to the translation cache. 
 	
-%	\subsection{Tiny Code Generator}
-	Tiny Code Generator
+	The Figure \ref{fig:generation} represents a example of the translation stages in DBT (instruction decoding and code generation) for the source architecture 8051 and to target architecture Cortex M3.
 	
-%	\subsection{DBT Generator}	 
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=1\linewidth]{Images/codegeneration}
+		\caption{Code Generation}
+		\label{fig:generation}
+	\end{figure}	
+	
+	The 8051 code has a \texttt{INC A} instruction. The decoder has for each instruction a template of intermediate representation that is a conjunct of functions that should be call in order to generate the corresponding code for that instruction from source architecture. In this case, the intermediate representation for  the \texttt{INC A} instruction is load of a byte from the Accumulator of the source architecture to the temporary register, then add one to that temporary and finally store that temporary register in the accumulator. The code generation process is inside of each of these functions that genarate the corresponding instructions for each intermediate representation.
+	
+	Inside of each function there is temporary variables. And each function apply a series of masks with the opcode and put the registers that function receives in the right place in the instruction. After this process are concluded the temporary variables have the corresponding instruction for the target architecture. The next step, inside the function, is to put that temporary variables in the translation cache for later execution. As we can observe the functions are specific for an architecture, because they generate the specific instruction for an architecture defined by the designer. 
+	\newpage
+	As we can observe in the following schematic, these type of intermediate representation has two types of functions:
+	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{Images/functions}
+		\caption{Intermediate Representation Function types}
+		\label{fig:genfunctions}
+	\end{figure}
+	
+	The table \ref{IRTable} represents the functions that are used to generate code. The main objective is  to clarify and show the series of functions that are involved in this part of the DBT. 
+	
+	With the obsevation of the table we can verify that the intermediate representation has a vast number of functions. These functions represent basic instructions or operations, for example, addition, logic or, load, store and so on.
+	
+	The two functions that are most used are load and store because to make some alteration in a variable located in memory, it is need to load that variable before it's used. After the operation complete it is necessary to store again in the same memory position the result.
+	
+	The first two gen functions in table are relevant functions because they are needed to save and restore the context before and after a basic block.
+	
+	\begin{table}[h]
+		\caption{Code Generation Functions}
+		\label{IRTable}
+		\centering
+		\begin{tabular}{|l|p{10cm}|}
+			\hline
+			\rowcolor[HTML]{C0B0C1} 
+			\textbf{Functions}	    		  &	\textbf{Description}\\ \hline
+			gen\_prolog			    		  &	Saving the value and state of the registers \\ \hline 
+			gen\_epilog			    		  &	Restoring the value and state of the registers \\ \hline 
+			gen\_blx		    	          &	Branch with link \\ \hline 
+			gen\_PUSH, gen\_POP               &	Push or pop multiple registers \\ \hline 
+			gen\_cmp, gen\_cmpi 	          &	Compares two values\\ \hline 
+			gen\_it					          & If then	\\ \hline 
+			gen\_cje, gen\_cjei 	          & Compare two values and jump if they are equal	\\ \hline 
+			gen\_cjne, gen\_cjnei		      & Compare two values and jump if they are not equal	\\ \hline 
+			gen\_writePC, gen\_writePCreg     & Alter the Value of Program Counter\\ \hline 
+			gen\_mov 					      & Moves a value from a register to another\\ \hline 
+			gen\_movi 						  & Moves a immediate value to a register \\ \hline
+			gen\_ld8, gen\_ld16, gen\_ldi8	  & Loads a value from memory to a register\\ \hline 
+			gen\_st8, gen\_st16, gen\_sti8    &	Stores a value from registers into the memory\\ \hline 
+			gen\_ld\_bit                      &	Loads a bit from memory\\ \hline 
+			gen\_st\_bit                      &	Stores a bit in the memory\\ \hline 
+			gen\_add gen\_addi				  &	Addition \\ \hline 
+			gen\_sub, gen\_subi				  &	Subtract \\ \hline 
+			gen\_div						  &	Division \\ \hline 
+			gen\_mul					      &	Multiplication \\ \hline 
+			gen\_not						  &	Negate a register\\ \hline 
+			gen\_or, gen\_ori				  &	Or logic \\ \hline 
+			gen\_and, gen\_andi				  &	And logic \\ \hline 
+			gen\_xor						  &	Xor logic \\ \hline 
+			gen\_shri, gen\_shli			  &	Logic Shift right and logic shift left \\ \hline 
+			gen\_orShl 						  &	Logic or add shift left\\ \hline 
+			helper\_ret 					  & Reproduces the steps that source architecture has when returning from a subroutine	\\ \hline 
+			helper\_call 					  & Reproduces the steps that source architecture has when calling a subroutine	\\ \hline 
+			helper\_DA						  &	Adjust accumulator after a addition \\ \hline 
+		\end{tabular}
+	\end{table} 
+	
+	As mentioned before, the decoding and code generation are parts of the translation that are tightly correlated. That connection between the two parts is made through the gen functions, in other words the functions of the intermediate representation are called in the decode in order to generate code.
+	
+	Another thing that we can conclude is that the generator part of the translation is related to the target architecture. This happens, because to generate code it is need to know the registers and opcodes of the target architecture.
+	
+	At the same time, the code generator also needs some informations from the source architecture, like for example, the Program Counter.  On the other hand, the code generation needs to have access to the memory of the source architecture to get and set the registers that are mapped in memory and also the memory contents of other positions. The memory of the source architecture is simulated inside of the target memory.  Thus, the code generation only needs to know where that memory is located.
+	
+	Other aspect to highlight, is that the code generation writes the result of generation in the translation cache.
+	
+	These relationships above cited will be explained during this report, since to model the code we first need to understand the relationships that code generation has with the other parts of the code.
+	\clearpage
 
-	
-\newpage
-	
 	\section{Reference Architecture}
 	
 	\par This section explains each of the reference architecture's component and its properties and interfaces. The name notation used indicates that all the references are started with \texttt{r\_} and all the services start with \texttt{s\_}.
