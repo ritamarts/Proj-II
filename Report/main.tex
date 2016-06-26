@@ -1281,11 +1281,169 @@
 
 	\section{Elaboration Language Script}
 	
-	\par Explicar todo o processo para se escreverem scripts EL
+	\par %Explicar todo o processo para se escreverem scripts EL
+	The Scripts of the DBT were made following the Reference Architecture. They were organize in the files with the extension el with the following conventions, made by the groups involve in the modeling of the DBT: 
+	\begin{itemize}
+		\item The \texttt{components} are placed in script with the same name and following the rule one component by script. 
+		\item The \texttt{interfaces} are placed in a single script, with the name "Interfaces", and import in each component script.
+		\item The \texttt{language} is defined in a single script, with the name "Languages" and also is imported in each component script.
+		\item The subcomponents should be imported as well.
+		\item The scripts name are written with Upper Camel Cases.
+	\end{itemize}
+	
+	The result is shown in the figure \ref{fig:scripts}.
+	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.2\linewidth]{Images/scripts}
+		\caption{List of EL Scripts for the DBT}
+		\label{fig:scripts}
+	\end{figure}
+	
+	Starting from the language script that is imported in the other files and defines the annotation that is used in the source files.
+	\begin{lstlisting}
+	language C
+	{
+		annotation: "@@"
+	}
+	\end{lstlisting}
+	The Component generator were made following the topics that were showed before. From the reference architecture we can take the properties, services and references that should be defined in each component.
+
+	\begin{lstlisting}
+	import "Languages.el"
+	import "Interfaces.el"
+	
+	component Generator (C)
+	{
+		properties:
+			bool optimizations : false
+			bool trgCodeTracing : true
+			
+		services:
+			i_Generate s_Generate	
+			
+		references:
+			i_Registers r_SrcRegisters
+			i_Registers r_TrgRegisters
+			i_SrcEnv r_SrcEnv
+			i_ISA r_ISA
+			i_TCache r_TCache
+			i_DMem r_DMem	
+			i_EngineState r_EngineState
+	}
+	\end{lstlisting}
+	
+	The binds of the generator to other components that are in the same level of him are made in the component that has the generator has subcomponent, which means the script \texttt{TargetCluster.el}.
+	
+	As we can observe in the line 12 and 13 are made the wires between component generator and the target architecture.
+	
+	In the lines 15, 16, 17 and 18 are promoted the references to be bind to other components above the level of the generator.
+	
+	\begin{lstlisting}
+	import "Languages.el"
+	import "Interfaces.el"
+	import "Generator.el"
+	import "Architectures.el"
+		
+	component TargetCluster (C)
+	{
+		subcomponents:
+			TargetArch target
+			Generator gen 
+		
+		bind gen.r_ISA to target.s_ISA
+		bind gen.r_TrgRegisters to target.s_Registers
+		
+		promote reference gen.r_SrcRegisters as pr_SrcRegisters
+		promote reference gen.r_SrcEnv 		 as pr_SrcEnv
+		promote reference gen.r_TCache 		 as pr_TCache
+		promote reference gen.r_DMem		 as pr_Dmem
+		promote reference gen.r_EngineState  as pr_EngineState
+		
+		promote service target.s_MemSizes as ps_MemSizes
+		promote service target.s_ISA as ps_ISA	
+		promote service gen.s_Generate as ps_Generate
+	
+	}
+	\end{lstlisting}
+	Finally, in the top level are the binds for the service and references promoted from the component Generator and connected to different components through out each interface. This is showed in the next code in the lines from 49 to 54. 
+	\begin{lstlisting}
+	import "Languages.el"
+	import "Interfaces.el"
+	
+	
+	/*** Source and Target Architectures ***/
+	import "Architectures.el"
+	/*-----------------------*/
+	
+	/*** Source Group ***/
+	/*-----------------------*/
+	import "SourceCluster.el"
+	/*-----------------------*/
+	
+	/*** Target Group ***/
+	/*-----------------------*/
+	import "TargetCluster.el"
+	/*-----------------------*/
+	
+	/*** DBT Engine ***/
+	/*-----------------------*/
+	import "DBTEngine.el"
+	/*-----------------------*/
+	
+	/*** Memory Structures ***/
+	/*-----------------------*/
+	import "CodeCache.el"
+	import "TranslationCache.el"
+	import "DataMemory.el"
+	/*-----------------------*/
+	
+	compile DBT
+	component DBT (C)
+	{
+		properties:
+			bool Measure : true
+	
+		subcomponents:
+			SourceCluster srcCluster
+			TargetCluster trgCluster
+			CodeCache cCache
+			TranslationCache tCache	
+			DBTEngine dbtEngine
+	
+		references:
+			i_Engine r_Engine
+			i_MemSizes r_TrgMemSizes
+			i_MemSizes r_SrcMemSizes
+
+		bind trgCluster.pr_SrcRegisters to srcCluster.ps_Registers	
+		bind trgCluster.pr_SrcEnv to srcCluster.ps_SrcEnv
+		bind trgCluster.pr_TCache to tCache.s_TCache
+		bind trgCluster.pr_Dmem to srcCluster.pps_DMem	
+		bind trgCluster.pr_EngineState to dbtEngine.s_EngineState 
+		bind srcCluster.pr_Generate to trgCluster.ps_Generate
+		bind cCache.r_ISA to srcCluster.ps_ISA
+		bind dbtEngine.pr_DMem to srcCluster.pps_DMem
+		bind dbtEngine.pr_Decode to srcCluster.ps_Decode
+		bind tCache.r_ISA to trgCluster.ps_ISA
+		bind srcCluster.pr_CCache to cCache.s_CCache
+		bind dbtEngine.pr_TransTCache to tCache.s_TCache
+		bind r_Engine to dbtEngine.s_Engine
+		bind dbtEngine.pr_Generate to trgCluster.ps_Generate    	
+		bind srcCluster.pr_EngineState to dbtEngine.s_EngineState 	
+		bind dbtEngine.r_CCache to cCache.s_CCache					
+		bind dbtEngine.r_SrcEnv to srcCluster.ps_SrcEnv				
+		bind dbtEngine.r_TCache to tCache.s_TCache
+		bind r_TrgMemSizes to trgCluster.ps_MemSizes
+		bind r_SrcMemSizes to srcCluster.ps_MemSizes
+	}
+	\end{lstlisting}
+	
 	
 	\section{Elaborations}
 	
-	\par Explicar todo o processo para se escreverem Elaborações
+	\par% Explicar todo o processo para se escreverem Elaborações
+	
 	
 	\subsection{Annotations}
 	
