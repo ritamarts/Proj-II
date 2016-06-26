@@ -28,6 +28,22 @@
 \usepackage{cite}
 \usepackage{float}
 
+\definecolor{ritagreen}{rgb}{0.0, 0.71, 0.0}
+
+\lstset{emph={interface, compile, language, component, properties, services, references, subcomponents, bind, to, annotation, int, string, float, promote, service, reference, is}, emphstyle=\color{purple}\textbf,
+	tabsize=1,
+	frame=single,
+	breaklines=true,
+	morecomment=[s][\color{blue}]{"}{"},
+	commentstyle=\color{ritagreen},
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	numbers=left,
+	stepnumber=1,    
+    firstnumber=1,
+    numberfirstline=true
+}
+
 \newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}}}{\end{list}}
 \newcommand{\abbrlabel}[1]{\makebox[3cm][l]{\textbf{#1}\ \dotfill}}
 
@@ -251,8 +267,8 @@
 			
 			\begin{lstlisting}
 			compile Composite
-			
-			language C{
+
+			language C {
 				annotation: "@"
 			}
 			
@@ -642,7 +658,9 @@
 			\label{fig:DBTEngine}
 		\end{figure}
 		
-			\subsubsection{Translate}
+			\subsubsection{Translator}
+			
+			\par The \texttt{Translator} component offers one service -- \texttt{s\_Translate} -- and three references -- \texttt{r\_Generate}, \texttt{r\_TCache} to access code in \texttt{TranslationCache} and \texttt{r\_Decode} -- and one service -- \texttt{s\_Translate}. It does not contains properties. 
 				
 			\begin{figure} [H]
 				\centering
@@ -651,7 +669,9 @@
 				\label{fig:Translator}
 			\end{figure}
 			
-			\subsubsection{Execute}
+			\subsubsection{Executor}
+			
+			\par The \texttt{Executor} component has two references -- \texttt{r\_DMem} to read and write into data memory and \texttt{r\_currBBExec} to access the basic block being executed -- and one service -- \texttt{s\_Execute}. It offers no properties.
 
 			\begin{figure} [H]
 				\centering
@@ -662,7 +682,7 @@
 			
 		\subsection{Interfaces}
 
-			\paragraph{i\_ISA}
+			\subsubsection*{i\_ISA}
 			
 			\begin{lstlisting}
 			interface i_ISA {
@@ -672,7 +692,7 @@
 			}
 			\end{lstlisting} 
 			
-			\paragraph{i\_MemSizes}	
+			\subsubsection*{i\_MemSizes}	
 			
 			\begin{lstlisting}
 			interface i_MemSizes{
@@ -684,27 +704,135 @@
 			}
 			\end{lstlisting} 	
 
-			\paragraph{i\_Registers}
+			\subsubsection*{i\_Registers}
 			
-			\paragraph{i\_SrcEnv}	
+			\begin{lstlisting}
+			interface i_Registers {
+			}
+			\end{lstlisting}
 			
-			\paragraph{i\_TCache}
+			\subsubsection*{i\_SrcEnv}	
 			
-			\paragraph{i\_DMem}
+			\begin{lstlisting}
+			interface i_SrcEnv {
+				getPC
+				setPC
+				envReset
+			}
+			\end{lstlisting}
 			
-			\paragraph{i\_Decode}
+			\subsubsection*{i\_TCache}
+		
+			\begin{lstlisting}
+			interface i_TCache {
+				addTag 			
+				getTransAddr		
+				getLastTransAddr 	
+				getCurrInsAddr	
+				cacheCode		
+			}
+			\end{lstlisting}
 			
-			\paragraph{i\_Generate}
+			\subsubsection*{i\_CCache}
 			
-			\paragraph{i\_Translate}
+			\begin{lstlisting}
+			interface i_CCache {
+				fetch	
+				load
+			}
+			\end{lstlisting}
+			
+			\subsubsection*{i\_DMem}
+			
+			\begin{lstlisting}
+			interface i_DMem {
+				readDataMem	 	
+				writeDataMem
+			}
+			\end{lstlisting}			
+			
+			\subsubsection*{i\_Decode}
+			
+			\begin{lstlisting}
+			interface i_Decode {
+				decode 
+			}
+			\end{lstlisting}	
+			
+			\subsubsection*{i\_Generate}
+			
+			\begin{lstlisting}
+			interface i_Generate {
+				helper_ret	helper_call	helper_xmem_range	
+				helper_CC_lazyEv_SNIFFER_BACKDOOR	helper_DA	
+				helper_debug
+				gen_assemble_lazyEv_param
+				gen_helper	
+				gen_brkp  	gen_blx
+				gen_PUSH  	gen_POP
+				gen_cmp 	gen_cmpi
+				gen_it  
+				gen_cje  	gen_cjne	gen_cjei  	gen_cjnei
+				gen_writePC gen_writePCreg
+				gen_mov  	gen_movi
+				gen_ld8  	gen_ld16  gen_ldi8
+				gen_st8	 	gen_st16  gen_sti8
+				gen_ld_bit  gen_st_bit
+				gen_add  	gen_addi
+				gen_sub  	gen_subi
+				gen_div  	gen_mul
+				gen_not
+				gen_or  	gen_ori
+				gen_and  	gen_andi
+				gen_xor
+				gen_shri 	gen_shli
+				gen_orShl
+				gen_prolog gen_epilog
+			}
+			\end{lstlisting}
+			
+			\subsubsection*{i\_Translate}
+			
+			\begin{lstlisting}
+			interface i_Translate{
+				translate 
+			}
+			\end{lstlisting}
 
-			\paragraph{i\_CurrBBExec}
+			\subsubsection*{i\_CurrBBExec}
 			
-			\paragraph{i\_Execute}
+			\begin{lstlisting}
+			interface i_CurrBBExec{
+				currBBExecPtr
+			}
+			\end{lstlisting}
 			
-			\paragraph{i\_Engine}
+			\subsubsection*{i\_Execute}
 			
-			\paragraph{i\_EngineState}				
+			\begin{lstlisting}
+			interface i_Execute{
+				execute
+			}
+			\end{lstlisting}
+			
+			\subsubsection*{i\_Engine}
+			
+			\begin{lstlisting}
+			interface i_Engine{
+				initTranslator
+				runDBT
+			}
+			\end{lstlisting}
+			
+			\subsubsection*{i\_EngineState}			
+			
+			\begin{lstlisting}
+			interface i_EngineState{
+				eoBB
+				eoExec
+				pSourceProgMem
+			}
+			\end{lstlisting}	
 
 	
 	\section{Test Plans}
