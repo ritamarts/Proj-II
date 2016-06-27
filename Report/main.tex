@@ -48,8 +48,7 @@
 	firstnumber=1,
 	numberfirstline=true,
 	numberstyle=\tiny\color{mygray}
-}
-}{}
+}}{}
 
 \lstnewenvironment{Cpp}{
 	\lstset{
@@ -214,6 +213,7 @@
 \par Creating a model for an embedded system provides a time-saving and cost-effective approach to the development of dynamic systems, based on a single model maintained in a tightly integrated software. 
 \par Using modern modeling software tools it is possible to design and perform initial validation. It is possible to reduce the risk of errors and shorten development time by performing verification and validation testing throughout the development. Errors and overhead can also be reduced through the use of automatic code generation techniques\cite{j.h.foleissa.l.t.d'amatoa.f.dasilva2012}.
 \par With these advantages in mind, it was developed a Domain Specific Language in the context of the master's degree in Embedded Systems, the Elaboration Language, to easily create models of a given reference architecture. In this project, it is used the reference architecture of a dynamic binary translator to prove the efficiency of the tool.
+
 
 %END ABSTRACT CHAPTER
 %-------------------------------------------
@@ -1652,13 +1652,20 @@
 
 \chapter{Conclusion}
 
-	\section{Future Work} 
+	\par This project was divided in three phases: analysis, design and implementation. In the analysis, it was made a deep study about modeling, which contemplate the Service Component Architecture and Domain Specify Languages. The Elaboration Language and the details that are needed for the user and the designer were covered. The analysis chapter ends with the study of the Dynamic Binary Translator: its source and target architectures and the architectural model.
+	\par During the Design Chapter, the focus was on the code interpretation. A deeper study was made around the code analysis and the code refactor. The code generation also takes an important role because is the main focus of the group. The reference architecture model is presented with all the components and interfaces. The chapter ends with the tests' plans.
+	\par The implementation shows the concretization of the project. The model was translated to Elaboration Language and the respective Elaborations were made. The Optimizations section was an extra work that the group decided to do to contribute to the code in some way. After this, the results are exposed.
+	
+
+	\section{Future Work}
+	
+	\par  As 
 
 %END CONCLUSION CHAPTER
 %-------------------------------------------
 \newpage
 	
 \bibliography{mybib}{}
-\bibliographystyle{ieeetr}
+%\bibliographystyle{ieeetr}
 	
 \end{document}
