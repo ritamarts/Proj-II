@@ -1463,6 +1463,88 @@
 	\section{Elaborations}
 	
 	\par% Explicar todo o processo para se escreverem Elaborações
+	After all the EL scripts are made with all component, properties, interfaces and the binds, the next step is compile the DBT. To make this we just need to click with right button of the mouse above the script with the top level, as is shown in the figure \ref{fig:compileel}.
+	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.4\linewidth]{Images/compileEL}
+		\caption{Compile EL scripts}
+		\label{fig:compileel}
+	\end{figure}
+	
+	This will generate a series of files and folders. It will generate also the XML for each component and the template for specific elaborations.
+	
+	The source files of DBT with annotations should be placed in the same folder of the specific elaboration for the component that models that code, or in the folder shared sources if the source as annotations that refer to different components. 
+	
+	The process to make the specific elaborator for a component, is to use the Elaborator API to open sources and replace their annotations.
+	
+	\begin{lstlisting}
+	package EL.SpecificElaborations.Generator.SpecificGeneratorElaborator;  
+	
+	import EL.Components._Generator;
+	import EL.Elaborations.AbstractGeneratorElaborator;
+	import EL.ElaborationError;
+	import java.util.ArrayList;
+	import EL.ConfigReader.SpecificConfigReader;
+	import EL.Elaborations.*;
+	import EL.ConfigReader.*;
+	import EL.Components.*;
+	
+	public class SpecificGeneratorElaborator extends AbstractGeneratorElaborator {
+	SpecificConfigReader scr = null;
+	
+	public void generate(){
+	System.out.println("This is the Generator template specific elaboration.");
+	openAnnotatedSource("TargetArch_CortexM3.h");
+	replaceAnotation("Generator_optimization",String.valueOf(target.get_optimizations()));
+	
+	openAnnotatedSource("TargetArch_CortexM3.cpp");		
+	AbstractTranslationCacheElaborator TCacheElab = (AbstractTranslationCacheElaborator) getElaborator((_TranslationCache) target.get_r_TCache());
+	replaceAnotation("Generator_cacheCode", (String) TCacheElab.getI_TCacheElaboratorCacheCode());
+	
+	AbstractSourceEnvElaborator SrcEnvElab = (AbstractSourceEnvElaborator) getElaborator((_SourceEnv) target.get_r_SrcEnv());
+	replaceAnotation("Generator_getPC", (String) SrcEnvElab.getI_SrcEnvElaboratorGetPC());
+	
+	AbstractDataMemoryElaborator DataMemElab = (AbstractDataMemoryElaborator) getElaborator((_DataMemory) target.get_r_DMem());
+	replaceAnotation("Generator_readDataMem", (String) DataMemElab.getI_DMemElaboratorReadDataMem());
+	
+	AbstractDBTEngineElaborator DBTEngineElab = (AbstractDBTEngineElaborator) getElaborator((_DBTEngine) target.get_r_EngineState());		
+	
+	replaceAnotation("Generator_eoBB", (String) DBTEngineElab.getI_EngineStateElaboratorEoBB());
+	replaceAnotation("Generator_eoExec", (String) DBTEngineElab.getI_EngineStateElaboratorEoExec());
+	
+	openAnnotatedSharedSource("types.h");
+	if(target.get_trgCodeTracing()==false)
+	replaceAnotation("Generator_tracing","//");
+	else
+	replaceAnotation("Generator_tracing","");
+	}
+	\end{lstlisting}
+	
+	After the specific elaboration file is completed with the strings that should substitute the annotations we can build the final sources that will be folder FinalFiles. To do that we should execute the commands that are in the following figures.
+	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{Images/script}
+		\caption{Generate the elaborator}
+		\label{fig:build}
+	\end{figure}
+	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{Images/scriptrunElaborator}
+		\caption{Elaborator}
+		\label{fig:runElaborator}
+	\end{figure}
+	
+	The first one generates the .class files for each component, abstract elaboration, specific elaboration and so on. And after that generates the Elaborator from that files.
+	
+	The Second one runs the Elaborator that will generate the final sources files by replacing the annotations and copy the files to the FinalFiles folder.
+	
+	After the execution of this commands we can validate the process by comparing the sources files that have the annotation replace by the elaborator with the ones that we want to generate, and the result is a perfect match.
+	
+	
+	
 	
 	
 	\subsection{Annotations}
