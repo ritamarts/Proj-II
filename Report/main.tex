@@ -33,7 +33,7 @@
 
 \lstnewenvironment{EL}{
 \lstset{
-	emph={interface, compile, language, component, properties, services, references, subcomponents, bind, to, annotation, int, string, float, promote, service, reference, is, import}, 
+	emph={interface, compile, language, component, properties, services, references, subcomponents, bind, to, annotation, int, string, float, promote, service, reference, is, import, elaboration, property, value, element}, 
 	emphstyle=\color{purple}\textbf,
 	basicstyle=\ttfamily,
 	tabsize=1,
@@ -454,7 +454,7 @@
 		\par At compilation time, a configuration file written in XML should be created for each component. The configuration files have two roles: provide properties' values and specify which elaborations should be used.
 		\par The user can alter the properties' values and choose the elaboration in the XML code respective fields. The fields are automatically filled through the EL's code generation. Bellow it is presented one XML file example.
 		
-		\begin{lstlisting}[language=XML]
+		\begin{EL}
 		<?xml version="1.0" encoding="UTF-8"?>
 		
 		<component type="Generator">
@@ -467,7 +467,7 @@
 				</property>
 			</properties>
 		</component>
-		\end{lstlisting}
+		\end{EL}
 		
 		\subsection{Use Cases}
 		
@@ -1502,7 +1502,7 @@
 	
 	\section{Elaborations}
 	
-	After all the EL scripts are made with all component, properties, interfaces and the binds, the next step is compile the DBT. To make this we just need to click with right button of the mouse above the script with the top level, as is shown in the figure \ref{fig:compileel}.
+	After all the EL scripts are made with all component, properties, interfaces and the binds, the next step is compile the DBT. To make this it is only necessary to click with right button of the mouse above the script with the top level, as is shown in the figure \ref{fig:compileel}.
 	
 	\begin{figure} [H]
 		\centering
@@ -1511,20 +1511,26 @@
 		\label{fig:compileel}
 	\end{figure}
 	
-	This will generate a series of files Java and XML. The two most important folders are the Configs where the configurable XML is put and the \texttt{SpecificElaborations} where it generates a template for each component. 
-	If we don't wanna alter the template and because when the EL is compiled the file is overwritten we should alter the XML of a specific component to have the specific elaboration file that we want.
-	In the case of the Generator we want the \texttt{SpecificGeneratorElaborator} instead of template that is set by default so we alter the XML as is shown in the line 4 of the following XML.
+	This will generate a series of files Java and XML. The two most important directories are the \texttt{Configs} where the configurable XML is stored and the \texttt{SpecificElaborations} where it generates a template for each component. 
+	If the template change is not desired, and because when the EL is compiled the file is overwritten, the XML of a specific component should be altered to have the specific elaboration file that is wanted.
+	In the case of the \texttt{Generator} it is wanted the \texttt{SpecificGeneratorElaborator} instead of template that is set by default so the XML is altered as shown in the line  of the following XML.
 	\begin{EL}
-		<?xml version="1.0" encoding="UTF-8"?>	
-		<component type="Generator">
+	<component type="Generator">
 		<elaboration default="SpecificGeneratorElaboratorTemplate">SpecificGeneratorElaborator</elaboration>
+			<properties>
+				<property type="bool" name="optimizations" default="false"><value>
+					<element>true</element>
+				</value>
+			</property>
+		</properties>
+	</component>
 	\end{EL}
 	
 	The source files of DBT with annotations should be placed in the same folder of the specific elaboration for the component that models that code, or in the folder shared sources if the source as annotations that refer to different components. 
 	
-	The annotations that the elaborator for the generator replaced are described in the following table (Table \ref{annotationTable}).
+	The annotations that the elaborator for the generator replaced are described in table \ref{annotationTable}.
 	\begin{table}[h]
-		\caption{Code Generation Functions}
+		\caption{Code generation functions.}
 		\label{annotationTable}
 		\centering
 		\begin{tabular}{|l||l||l|}
@@ -1543,11 +1549,11 @@
 	
 	The table shows that the generator is only going to alter the files TargetArch\_CortexM3.h and TargetArch\_CortexM3.cpp and a shared source named types.
 	
-	The third column of the table as the type of replacement. As we can observe there are three types the first one is replace the annotation with the value of a property that is alter in the XML. 
+	The third column of the table as the type of replacement. As it is possible to observe there are three types the first one is replace the annotation with the value of a property that is altered in the XML file. 
 	
-	The second type is the interface functions replacement, this type is to respect the interfaces from the model. If a component makes reference to a service in the other component, we need in the code to make and replace a annotation, that is according with the function of that interface, in order to respect the Reference Architecture. 
+	The second type is the interface functions replacement to respect the interfaces from the model. If a component makes reference to a service in component, the user needs to alter the code and replace a annotation, that is according with the function of that interface, in order to respect the reference architecture. 
 	
-	And last type is a direct string replacement. In this case we use a property to know if the elaborator should comment or simply delete the annotation. The elaborator replace with a string with the comment or with nothing, deleting the annotation from the source file.
+	And last type is a direct string replacement. In this case it is used a property to know if the elaborator should comment or simply delete the annotation. The elaborator replace with a string with the comment or with nothing, deleting the annotation from the source file.
 	
 	The process to make the specific elaborator for a component, is to use the AbstractElaborator API to open sources and replace their annotations.
 	
@@ -1596,9 +1602,9 @@
 	
 	After the specific elaboration file is completed with the strings that should substitute the annotations, it is possible to build the final sources that will be stored into the directory FinalFiles. To do that, the commands presented in the next figures should be executed.
 	
-	The first one (Figure \ref{fig:build}) generates the .class files for each component, abstract elaboration, specific elaboration and so on. And after that generates the Elaborator from that files.
+	The first one (Figure \ref{fig:build}) generates the \texttt{.class} files for each component, abstract elaboration, specific elaboration and so on. And after that generates the Elaborator from that files.
 	
-	The Second one (Figure \ref{fig:runElaborator} runs the Elaborator that will generate the final sources files by replacing the annotations and copy the files to the FinalFiles folder. It executes all the code of the specific elaboration, and can open the XML files to get a property value. At the end if everything is fine and the sources were generated it prints the message: "All final files successfully generated!". If something goes wrong in the elaboration, if it has some kind of error in the elaboration files it prints a error message informing the user.
+	The second one (Figure \ref{fig:runElaborator} runs the Elaborator that will generate the final sources files by replacing the annotations and copy the files to the FinalFiles folder. It executes all the code of the specific elaboration, and can open the XML files to get a property value. At the end if everything is fine and the sources were generated it prints the message: "All final files successfully generated!". If something goes wrong in the elaboration, if it has some kind of error in the elaboration files it prints a error message informing the user.
 	
 	\begin{figure} [H]
 		\centering
@@ -1614,20 +1620,20 @@
 		\label{fig:runElaborator}
 	\end{figure}
 	
-	The final files will have all the notations replaced with the String that the user defined. For example in the case of the annotation in the Figure \ref{fig:annotationReplaced}, it will be replaced by the property optimizations. 
+	The final files will have all the notations replaced with the String that the user defined. For example, the annotation in the figure \ref{fig:annotation}, it will be replaced by the property optimizations. 
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=0.5\linewidth]{Images/anotation}
+		\includegraphics[width=0.5\linewidth]{Images/anotation.PNG}
 		\caption{Annotation of optimizations.}
 		\label{fig:annotation}
 	\end{figure}
 	
-	The annotation will be replaced with the value that the user put in the XML. If it has default value and the user didn't set other value in the XML it will be replaced by the default value as is shown in the Figure \ref{fig:CodeCache}
+	The annotation will be replaced with the value that the user put in the XML. If it has default value and the user didn't set other value in the XML it will be replaced by the default value as is shown in the figure \ref{fig:annotationReplaced}.
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=0.3\linewidth]{Images/anotationReplaced}
+		\includegraphics[width=0.3\linewidth]{Images/anotationReplaced.PNG}
 		\caption{Annotation replaced by it's default value.}
 		\label{fig:annotationReplaced}
 	\end{figure}
@@ -1713,7 +1719,7 @@
 		replaceAnotation("DBT","it works");
 	\end{lstlisting}
 	
-	The result was that the file was copy to FinalFiles folder with annotation replaced by the string "it works".
+	The result was that the file was copy to \texttt{FinalFiles} folder with annotation replaced by the string "it works".
 	
 	\paragraph{Integration Test}
 	The next test is to make all the specific elaborations and place the annotated source code in the right place, and verify if with all the elaborations build. With this test we verify that all annotation with properties change to the default value of that property, all the files were generated, all the annotations were replaced and that the shared sources were replaced in right place by the right component.
@@ -1771,7 +1777,7 @@
 	exec...
 
 	\end{lstlisting}
-	After all these tests results, we can verify that all the things are working fine and that the code that is generated is fully functional and can be used to binary translation.
+	After all these tests results, it is possible to verify that all the things are working fine and that the code that is generated is fully functional and can be used to binary translation.
 	
 	
 	
