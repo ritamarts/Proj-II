@@ -25,13 +25,16 @@
 \usepackage{listings}
 \usepackage{cite}
 \usepackage{float}
-%\usepackage{extsizes}
 
 \definecolor{ritagreen}{rgb}{0.0, 0.71, 0.0}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
 
 \lstnewenvironment{EL}{
 \lstset{
-	emph={interface, compile, language, component, properties, services, references, subcomponents, bind, to, annotation, int, string, float, promote, service, reference, is, import}, emphstyle=\color{purple}\textbf,
+	emph={interface, compile, language, component, properties, services, references, subcomponents, bind, to, annotation, int, string, float, promote, service, reference, is, import}, 
+	emphstyle=\color{purple}\textbf,
 	basicstyle=\ttfamily,
 	tabsize=1,
 	frame=single,
@@ -43,9 +46,49 @@
 	numbers=left,
 	stepnumber=1,    
 	firstnumber=1,
-	numberfirstline=true
+	numberfirstline=true,
+	numberstyle=\tiny\color{mygray}
 }
 }{}
+
+\lstnewenvironment{Cpp}{
+	\lstset{
+		emph={if, endif, true}, 
+		emphstyle=\color{purple}\textbf,
+		basicstyle=\ttfamily,
+		tabsize=1,
+		frame=single,
+		breaklines=true,
+		morecomment=[s][\color{blue}]{"}{"},
+		commentstyle=\color{ritagreen},
+		morecomment=[l]{//},
+		morecomment=[s]{/*}{*/},
+		numbers=left,
+		stepnumber=1,    
+		firstnumber=1,
+		numberfirstline=true,
+		numberstyle=\tiny\color{mygray}
+	}
+}{}
+
+\lstnewenvironment{ARM}{
+	\lstset{
+		emph={LDRH, ADDW, STRH, LDRB}, 
+		emphstyle=\textbf,
+		basicstyle=\ttfamily,
+		tabsize=1,
+		frame=single,
+		breaklines=true,
+		commentstyle=\color{ritagreen},
+		morecomment=[l]{;},
+		numbers=left,
+		stepnumber=1,    
+		firstnumber=1,
+		numberfirstline=true,
+		numberstyle=\tiny\color{mygray}
+	}
+}{}
+
 
 \lstset{
 	basicstyle=\ttfamily,
@@ -59,9 +102,9 @@
 	numbers=left,
 	stepnumber=1,    
 	firstnumber=1,
-	numberfirstline=true
+	numberfirstline=true,
+	numberstyle=\tiny\color{mygray}
 }
-
 
 
 \newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}}}{\end{list}}
@@ -179,15 +222,18 @@
 
 	\section{Motivation}
 	
-	\par The main motivation for this project is 
+	\par The main motivation for this project is the use of the modeling framework developed with the other groups in a real case. Modeling is a technique very valuable for any engineer, so using the Elaboration Language and respective code generation for this purpose was very interesting. 
+	\par In the other side, the dynamic binary translation is very challenging and the group had a big interest to see how this technique works.
 
 	\section{Objectives}
 	
 	\par The objectives of this work are:
 	\begin{itemize}
-		\item Identifying the modules for the reference architecture;
+		\item Identifying the modules of the reference architecture;
 		\item Modeling the implementation of a dynamic binary translation;
-		\item 
+		\item Successful generation of the final source files;
+		\item Create parameterized code;
+		\item Understand the concepts behind modeling.
 	\end{itemize}
 
 	\section{Problem Statement}
@@ -230,23 +276,17 @@
 		\end{figure}
 		
 		\paragraph{Elaboration Language Context} The Elaboration Language is based on the SCA. Next it is presented every element that can be used and a brief description.
-		
-			\subparagraph{Composite} A composite is a set of components. These can be used to represent another components or a reference architecture.
-		
-			\subparagraph{Component} An entity that provides or references services. 
-		
-			\subparagraph{Property} Variables that can be defined inside the component and that store its characteristics. 
-		
-			\subparagraph{Interface} A list of functions that describe a service or reference.
-		
-			\subparagraph{Service} Set of operations associated to a component are characterized by an interface. 
-		
-			\subparagraph{Reference} A service that is consumed by a component. Also characterized by an interface.
-		
-			\subparagraph{Wire} A bound created between a reference and a service defined by the same interface.
-		
-			\subparagraph{Implementation} Code block implemented in a programming language.
-		
+		\begin{itemize}
+			\item \textbf{Composite} -- A composite is a set of components. These can be used to represent another components or a reference architecture.
+			\item \textbf{Component} -- An entity that provides or references services. 
+			\item \textbf{Property} -- Variables that can be defined inside the component and that store its characteristics.
+			\item \textbf{Interface} -- A list of functions that describe a service or reference.
+			\item \textbf{Service} -- Set of operations associated to a component are characterized by an interface. 
+			\item \textbf{Reference} -- A service that is consumed by a component. Also characterized by an interface.
+			\item \textbf{Wire} -- A bound created between a reference and a service defined by the same interface.
+			\item \textbf{Implementation} -- Code block implemented in a programming language.
+		\end{itemize}
+
 	\section{Elaboration Language}
 	
 	\par Elaboration Language (EL) was the DSL developed by a group of students to create models, and was written using the Eclipse frameworks Xtext and Xtend. Xtext is necessary for specifying the grammar and all the other features were written using Xtend. 
@@ -269,8 +309,6 @@
 				
 				bind & Binds a reference to a service (bind ... to ...)\\
 				
-				bool & Property data type (boolean)\\
-				
 				compile & Indicates the top level component to compiler\\
 				
 				component & Defines a component \\
@@ -279,13 +317,9 @@
 				
 				import & Imports the content of a file \\
 				
-				int & Property data type (integer) \\
-				
 				interface & Defines a set of functions used by a service \\
 				
 				is & Inherits from the specified component \\
-				
-				float & Property data type (float) \\
 				
 				language & Definition of a language \\
 				
@@ -303,14 +337,67 @@
 				
 				services: & Defines the services of a component \\
 				
-				string & Property data type (string) \\
-				
 				subcomponents: & Defines the subcomponents of a component \\
 				
 				to & Connects a reference to a service in a bind operation (bind ... to ...)\\
 				\hline
+				bool, int, string, float & Properties' data types (C style) \\
+				\hline
 			\end{tabular}
 		\end{table}
+		
+		\subsection{Syntax and Semantics}
+		
+		\par It is essential to any language to be easily understandable. In the EL context it is necessary to understand how is it possible to express the service-based models.
+		\par To a better understanding it is exposed a simple model with two components in which one offers a service to another, represented in figure \ref{fig:example-diagram}.
+		
+		\begin{figure} [H]
+			\centering
+			\includegraphics[width=0.5\linewidth]{Images/diagram}
+			\caption{Example diagram.}
+			\label{fig:example-diagram}
+		\end{figure}
+		
+		\par The example diagram shows an EL model, in which the \texttt{Composite} is the component from where the model is generated. In the code this is represented by the expression \texttt{compile Composite}. It is defined a \texttt{language} and both components should follow it. In the \texttt{language} definition it is indicated the annotation symbol to be used by the elaborations later. An \texttt{interface} is created with all the functions that component \texttt{C\_B} provides as services. The component \texttt{C\_A} has one property \texttt{P\_A} of the type \texttt{int} and one reference \texttt{R\_A} to the service of the other component, so this reference must follow the same interface as the respective service from \texttt{C\_B}. The component \texttt{C\_B} offers a service \texttt{S\_B} and has a property \texttt{P\_B} of the type \texttt{string} with the default value text. Finally it is declared the component \texttt{Composite} that contains the two components described above and the \texttt{bind} of the reference \texttt{R\_A} to the service \texttt{S\_B}.
+		
+		\begin{EL}
+			//This is a comment
+			compile Composite
+			
+			language C {
+				annotation: "@"
+			}
+			
+			interface Interface {
+				func1 func2
+			}
+			
+			/* 
+			This is another comment 
+			*/
+			
+			component C_A (C) {
+				properties:
+				int P_A
+				references:
+				Interface R_A
+			}
+			
+			component C_B (C) {
+				properties:
+				string P_B : "text"
+				services:
+				Interface S_B
+			}
+			
+			component Composite (C) {
+				subcomponents:
+				C_A a
+				C_B b
+				
+				bind a.R_A to b.S_B
+			}
+		\end{EL} 			
 
 		\subsection{Work Flow}
 	
@@ -375,7 +462,7 @@
 			<properties>
 				<property type="bool" name="optimizations" default="false"> 
 					<value>
-						<element>"true"</element>
+						<element>true</element>
 					</value>
 				</property>
 			</properties>
@@ -395,53 +482,6 @@
 			\label{fig:use-cases}
 		\end{figure}
 		
-		\subsection{Syntax and Semantics}
-		
-		\par It is essential to any language to be easily understandable. In the EL context it is necessary to understand how is it possible to express the service-based models.
-		\par To a better understanding it is exposed a simple model with two components in which one offers a service to another, represented in figure \ref{fig:example-diagram}.
-		
-		\begin{figure} [H]
-			\centering
-			\includegraphics[width=0.5\linewidth]{Images/diagram}
-			\caption{Example diagram.}
-			\label{fig:example-diagram}
-		\end{figure}
-		
-		\par The example diagram shows an EL model, in which the \texttt{Composite} is the component from where the model is generated. In the code this is represented by the expression \texttt{compile Composite}. It is defined a \texttt{language} and both components should follow it. In the \texttt{language} definition it is indicated the annotation symbol to be used by the elaborations later. An \texttt{interface} is created with all the functions that component \texttt{C\_B} provides as services. The component \texttt{C\_A} has one property \texttt{P\_A} of the type \texttt{int} and one reference \texttt{R\_A} to the service of the other component, so this reference must follow the same interface as the respective service from \texttt{C\_B}. The component \texttt{C\_B} offers a service \texttt{S\_B} and has a property \texttt{P\_B} of the type \texttt{string} with the default value text. Finally it is declared the component \texttt{Composite} that contains the two components described above and the \texttt{bind} of the reference \texttt{R\_A} to the service \texttt{S\_B}.
-		
-		\begin{EL}
-		compile Composite
-
-		language C {
-			annotation: "@"
-		}
-		
-		interface Interface {
-			func1 func2
-		}
-		
-		component C_A (C) {
-			properties:
-				int P_A
-			references:
-				Interface R_A
-		}
-		
-		component C_B (C) {
-			properties:
-				string P_B : "text"
-			services:
-				Interface S_B
-		}
-		
-		component Composite (C) {
-			subcomponents:
-				C_A a
-				C_B b
-			
-			bind a.R_A to b.S_B
-		}
-		\end{EL} 			
 			
 	\section{Dynamic Binary Translation}
 	\par Binary translation is the process of converting code for one ISA architecture to code for another. There are two types of binary translation: static and dynamic. The main difference between the two approaches is that the static translation translates the entire program before the execution and dynamic translation translates code on demand during run time. This allows the dynamic binary translation (DBT) to deal with challenges that static binary translation do not suffice \cite{b.hawkingsb.demskyd.brueningq.zhao2015}. 
@@ -814,7 +854,7 @@
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=0.9\linewidth]{Images/refactoringuml}
+		\includegraphics[width=0.75\linewidth]{Images/refactoringuml}
 		\caption{Code Refactoring Class Diagram.}
 		\label{fig:refactoring}
 	\end{figure}	
@@ -829,7 +869,7 @@
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=1\linewidth]{Images/codegeneration}
+		\includegraphics[width=0.7\linewidth]{Images/codegeneration}
 		\caption{Code Generation}
 		\label{fig:generation}
 	\end{figure}	
@@ -837,7 +877,7 @@
 	The 8051 code has a \texttt{INC A} instruction. The decoder has for each instruction a template of intermediate representation that is a conjunct of functions that should be call in order to generate the corresponding code for that instruction from source architecture. In this case, the intermediate representation for  the \texttt{INC A} instruction is load of a byte from the Accumulator of the source architecture to the temporary register, then add one to that temporary and finally store that temporary register in the accumulator. The code generation process is inside of each of these functions that genarate the corresponding instructions for each intermediate representation.
 	
 	Inside of each function there is temporary variables. And each function apply a series of masks with the opcode and put the registers that function receives in the right place in the instruction. After this process are concluded the temporary variables have the corresponding instruction for the target architecture. The next step, inside the function, is to put that temporary variables in the translation cache for later execution. As we can observe the functions are specific for an architecture, because they generate the specific instruction for an architecture defined by the designer. 
-	\newpage
+
 	As we can observe in the following schematic, these type of intermediate representation has two types of functions:
 	
 	\begin{figure} [H]
@@ -1312,7 +1352,7 @@
 
 	\section{Test Plans}
 	
-	\par To validate all the work, it is necessary to make some tests. 
+	\par Tests are used to validate all the work. The needed tests are presented bellow.
 	
 	\paragraph{Single elaboration test} This test verifies the modeling tool and consists in creating a dummy component or composite, its reference architecture and elaboration. The expected result is the annotations' replacement associated with the source files.  
 	
@@ -1478,7 +1518,7 @@
 	
 	The process to make the specific elaborator for a component, is to use the Elaborator API to open sources and replace their annotations.
 	
-	\begin{lstlisting}
+	\begin{lstlisting}[language=Java]
 	package EL.SpecificElaborations.Generator.SpecificGeneratorElaborator;  
 	
 	import EL.Components._Generator;
@@ -1525,15 +1565,15 @@
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{Images/script}
-		\caption{Generate the elaborator}
+		\includegraphics[width=1\linewidth]{Images/script}
+		\caption{Generation of the elaborator.}
 		\label{fig:build}
 	\end{figure}
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{Images/scriptrunElaborator}
-		\caption{Elaborator}
+		\includegraphics[width=1\linewidth]{Images/scriptRunElaborator}
+		\caption{Running the elaborator.}
 		\label{fig:runElaborator}
 	\end{figure}
 	
@@ -1544,20 +1584,65 @@
 	After the execution of this commands we can validate the process by comparing the sources files that have the annotation replace by the elaborator with the ones that we want to generate, and the result is a perfect match.
 	
 	
-	
-	
-	
-	\subsection{Annotations}
-	
-	\par Explicar todo o processo para se anotar
-	
-	\par Generator
-	
-	\par falar das outras também
-	
 	\section{Optimizations}
 	
-	\par When the main objective of this project finished, the group decided to contribute in some way to the code. Over this report there were some references to optimizations, but it was not implemented in the assigned code. 
+	\par When the group finished the main objective of this project, it was decided to contribute in some way to the algorithm. Over this report there were some references to optimizations, but it was not implemented in the assigned code. 
+	\par When studying how the code was generated for the target architecture, that was detected the occurrence of irrelevant load instructions. The situation is easily understandable in the next example that shows the translated code for the source instruction \texttt{INC DPTR}.
+	\begin{ARM}
+	;R4 is the memory base and to it is added an offset
+	
+	;Load of the contents of (R4,#82) to R5.	
+	LDRH R5,[R4,#82]
+	;Incremenent the value of R5.
+	ADDW R5, R5, #1
+	;Store the value of R5 in (R4 + #0x82) position
+	STRH R5, [R4 + #0x82]
+	;Load the value of (R4, #0x82) to R5
+	LDRB R5,[R4,#0x82]
+	\end{ARM}
+	
+	\par The Load is not necessary in this situation because the value of R5 did not change between instructions. To save some cycles, it was introduced on simple algorithm to the load and store operations.
+	\par When a store instruction occurs, the value of the PC is stored into a auxiliar variable \texttt{auxPC\_Source}. The information about the register being used to store and the memory position are also stored into the variables \texttt{Optim\_DReg} and \texttt{auxR5} respectively. 
+	\begin{Cpp}
+	#if OPTIMIZATION == true
+		auxPC_source = env->PC;
+		Optim_DReg = SReg;
+		auxR5 = imm; 
+	#endif
+	\end{Cpp}
+	\par When a load instruction occurs, the register is compared with the value of \texttt{Optim\_DReg} and the immediate with the value stored in \texttt{auxR5}. Then, if the condition is true, it is verified if the actual PC is not more than three positions forward. This condition is necessary due to the variable size of the source architecture instructions' size. 
+	\par If this condition is true, then the value of \texttt{auxR5} is cleaned and the function ends here. There is no need to load from memory because the value of the register is valid.
+		
+	\begin{Cpp}
+	#if OPTIMIZATION == true
+	if (DReg == Optim_DReg && auxR5 == imm){
+		if (auxPC_source == ((env->getPC)-1) || auxPC_source == ((env->PC)-2) || auxPC_source == ((env->PC)-3)){
+			auxR5 |= 0xffff;
+			return;
+		}
+	}
+	#endif 
+	\end{Cpp}
+	
+	\par With this simple algorithm, the number of cycles is reduced in more than 1.45\% when compared to the number of cycles executed when the optimizations are turned off. The group made various tests to the algorithm to conclude that it was the best approach. Table \ref{tab:opt} shows the different results.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Optimizations results.}
+		\label{tab:opt}
+		\begin{tabular}{l|lll}
+			\hline
+			\textbf{Description} & \begin{tabular}[c]{@{}l@{}}\textbf{Number} \\ \textbf{of cycles}\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{Exit} \\ \textbf{address}\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{Percentual} \\ \textbf{optimization}\end{tabular} \\ \hline
+			Without optimization & 11393410026 & 0x88f & 0\% \\
+			\begin{tabular}[c]{@{}l@{}}With the first optimization \\ approach\end{tabular} & 11381943769 & 0x88f & 0,1006393781\% \\
+			\begin{tabular}[c]{@{}l@{}}Removing one 'if' condition\\ in store instructions \\ (first approach)\end{tabular} & 11228165032 & 0x88f & 1,450355895\% \\
+			\begin{tabular}[c]{@{}l@{}}Changing the 'if' order in load \\ instruction\end{tabular} & 11471817519 & 0x88f & -0,6881828427\% \\
+			\begin{tabular}[c]{@{}l@{}}Removing the condition \\ 'auxPC\_source == ((env-\textgreater PC)-3)' \\ in the second 'if'\end{tabular} & 11246271258 & 0x88f & 1,291437486\% \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	
 	
 	\section{Results}
 	
