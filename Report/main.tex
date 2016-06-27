@@ -1,4 +1,4 @@
-\documentclass{report}
+\documentclass[11pt]{report}
 \usepackage{color}
 \usepackage{graphicx}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
@@ -25,6 +25,7 @@
 \usepackage{listings}
 \usepackage{cite}
 \usepackage{float}
+%\usepackage{extsizes}
 
 \definecolor{ritagreen}{rgb}{0.0, 0.71, 0.0}
 
@@ -167,8 +168,9 @@
 %START ABSTRACT CHAPTER
 \chapter{Abstract}
 
-\par Creating a model for a embedded system provides a time-saving and cost-effective approach to the development of dynamic systems, based on a single model maintained in a tightly integrated software. 
+\par Creating a model for an embedded system provides a time-saving and cost-effective approach to the development of dynamic systems, based on a single model maintained in a tightly integrated software. 
 \par Using modern modeling software tools it is possible to design and perform initial validation. It is possible to reduce the risk of errors and shorten development time by performing verification and validation testing throughout the development. Errors and overhead can also be reduced through the use of automatic code generation techniques\cite{j.h.foleissa.l.t.d'amatoa.f.dasilva2012}.
+\par With these advantages in mind, it was developed a Domain Specific Language in the context of the master's degree in Embedded Systems, the Elaboration Language, to easily create models of a given reference architecture. In this project, it is used the reference architecture of a dynamic binary translator to prove the efficiency of the tool.
 
 %END ABSTRACT CHAPTER
 %-------------------------------------------
@@ -177,7 +179,7 @@
 
 	\section{Motivation}
 	
-	\par Let's write this in the end.
+	\par The main motivation for this project is 
 
 	\section{Objectives}
 	
@@ -190,8 +192,8 @@
 
 	\section{Problem Statement}
 	
-	\par Modeling is used in order to automate the configuration and generation of the final system. To create a model it is necessary a specialized framework, and the one used in this project was developed together with all the groups in the context of the major in Embedded Systems, consisting on a Domain Specific Language (DSL) which purpose is to model reference architectures and make its respective code generation. 
-	\par In this particular case, the modeling framework is used with the objective to model a DBT, in which the source code follows a 8051 Instruction Srt Architecture (ISA) and the translated code is generated for a ARMv7-M ISA.  The reference architecture was agreed by all the groups that are into this project, and this group focus is on the code generation for the target architecture and code optimization.
+	\par Modeling is used in order to automate the configuration, generation and validation of the final system. To create a model it is necessary a specialized framework, and the one used in this project was developed together with all the groups in the context of the major in Embedded Systems, consisting on a Domain Specific Language (DSL) which purpose is to model reference architectures and execute its respective code generation. 
+	\par In this particular case, the modeling framework is used with the objective to model a DBT, in which the source code follows a 8051 Instruction Set Architecture (ISA) and the translated code is generated for a ARMv7-M ISA.  The reference architecture was agreed by all the groups that are into this project, and this group focus is on the characterization, modeling and code generation for the target architecture and code optimization. The image \ref{fig:compiler-sequence} shows the catalog that is being develop for the Elaboration Language.
 	
 	\begin{figure} [H]
 		\centering
@@ -201,7 +203,7 @@
 	\end{figure}
 
 	\section{Modeling Languages}
-	\par A modeling language is any artificial language that can be used to express information or knowledge or systems in a structure that is defined by a consistent set of rules. The rules are used for interpretation of the meaning of components in the structure. They can be graphical or textual.
+	\par A modeling language is any artificial language that can be used to express information or knowledge of systems in a structure that is defined by a consistent set of rules. The rules are used for interpretation of the meaning of the components in the structure. They can be graphical or textual.
 	\par Graphical modeling languages use a diagram technique with named symbols that represent concepts and lines that connect the symbols and represent relationships and various other graphical notation to represent constraints.
 	\par Textual modeling languages may use standardized keywords accompanied by parameters or natural language terms and phrases to make computer-interpretable expressions.
 	\par Not all modeling languages are executable, and for those that are, the use of them does not necessarily mean that programmers are no longer required. On the contrary, executable modeling languages are intended to amplify the productivity of skilled programmers, so that they can address more challenging problems, such as parallel computing and distributed systems\cite{wikipedia}.
@@ -209,8 +211,9 @@
 		\subsection{Domain Specific Languages}
 		
 		\par DSL are programming languages, commonly with a small set of expressions, with the objective of abstracting and simplifying the code written for a specific case. So, these languages are useful just when used in that specific situation. Tough they may look limited at a first glance, they may have all the necessary resources to write code for a determined domain.
-		\par The usage of these languages should be simple enough in a way that the model is be the biggest effort done. A model should also be translated into code very intuitively by the user. It is important to note that the user is not always a designer: a DSL should be clear at the point that someone who is not used to programming languages could create its script without a lot of effort. The simplicity is pointed as a advantage, but there are disadvantages too: creating a framework like this requires a lot of technical skills and knowledge, and the development is very time consuming.
-		\par To write a DSL it is necessary to gather all the requirements to avoid subjectiveness and to specify all the semantics. Then, it is written a set of grammatic rules that check the desired operation of the language. It is also important to implement software capable of validate the code, type checking and scoping.
+		\par The usage of these languages should be simple enough in a way that the model is be the biggest effort done. A model should also be translated into code very intuitively by the user. It is important to note that the user is not always a designer: a DSL should be clear at the point that someone who is not used to programming languages could create its script without a lot of effort. The simplicity is pointed as an advantage, but there are disadvantages too: creating a framework like this requires a lot of technical skills and knowledge, and the development is very time consuming.
+		\par To write a DSL it is necessary to write a set of grammatic rules that check the desired operation of the language. Then, it is necessary to gather all the requirements to avoid subjectiveness and to specify all the semantics. It is also important to implement software capable of validate the code, type checking and scoping.
+		%\par To write a DSL it is necessary to gather all the requirements to avoid subjectiveness and to specify all the semantics. Then, it is written a set of grammatic rules that check the desired operation of the language. It is also important to implement software capable of validate the code, type checking and scoping.
 		\par After writing all of this software, it is necessary to implement engines that provide code generation. If the code generation is done nicely, the resulting behavioral model is correct.
 		
 		\subsection{Service Component Architecture}
@@ -226,7 +229,7 @@
 			\label{fig:sca}
 		\end{figure}
 		
-		\paragraph{Elaboration Language Context} EL is based on the SCA. Next it is presented every element that can be used and a brief description.
+		\paragraph{Elaboration Language Context} The Elaboration Language is based on the SCA. Next it is presented every element that can be used and a brief description.
 		
 			\subparagraph{Composite} A composite is a set of components. These can be used to represent another components or a reference architecture.
 		
@@ -311,7 +314,7 @@
 
 		\subsection{Work Flow}
 	
-		\par To develop and use a reference architecture there must be followed a work flow, composed by four steps: modeling, elaboration, configuration and generation. Each step provides the artifacts necessary for the subjacent step.
+		\par To develop and use a reference architecture there must be followed a work flow, composed by four steps: modeling, elaboration, configuration and generation. Each step provides the artifacts necessary for the subjacent step, as it is possible to see in figure \ref{fig:workflow}.
 		
 		\begin{figure} [H]
 			\centering
@@ -320,9 +323,9 @@
 			\label{fig:workflow}
 		\end{figure}
 	
-		\paragraph{Modeling} The first step consists in designing the reference architecture and, after that, writing the respective EL scripts. In some cases it is necessary to make code refactoring to keep the code in concordance with the model. It is also necessary to annotate the source files so the elaborations can replace these same annotations for literal values or expressions.
+		\paragraph{Modeling} The first step consists in designing the reference architecture and, after that, writing the respective EL scripts. In some cases it is necessary to refactor the code to keep the code in concordance with the model. It is also necessary to annotate the source files so the elaborations can replace these same annotations for literal values or expressions.
 
-		\paragraph{Elaboration} In this step are constructed Java classes to alter the code with annotations provided by the user. After the system modeling and writing all the elaboration, it is created a Java program called \textbf{Elaborator}. This program understands the complete model.
+		\paragraph{Elaboration} In this step are constructed Java classes to modify the code with annotations provided by the user. After the system modeling and writing all the elaboration, it is created a Java program called \textbf{Elaborator}. This program understands the complete model.
 
 		\paragraph{Configuration} At compilation time there are generated XML files with the configuration of the reference architecture components. The User can alter these files and by that configure properties values, arrays sizes ou change which elaboration will modify the source code.
 
@@ -382,13 +385,13 @@
 		\subsection{Use Cases}
 		
 		\par Two actors, the designer and the user, can interact with the languages artifacts. The user differentiates
-		from the designer to the extent that not possess the technical skills to design a reference architecture.
-		\par The \textbf{designer} is responsible for writing the elaboration files and the EL model design. The \textbf{user} is only responsible for the configuration of properties, if they exist and the Elaborator execution.
+		from the designer to the extent that he not possess the technical skills to design a reference architecture.
+		\par The \textbf{designer} is responsible for writing the elaboration files and the EL model design. The \textbf{user} is only responsible for the configuration of properties, if they exist and the Elaborator execution. Figure \ref{fig:use-cases} provides a brief view over each actor role.
 		
 		\begin{figure} [H]
 			\centering
 			\includegraphics[width=0.4\linewidth]{Images/use-cases}
-			\caption{Example diagram.}
+			\caption{Use cases for the Elaboration Language.}
 			\label{fig:use-cases}
 		\end{figure}
 		
@@ -441,9 +444,9 @@
 		\end{EL} 			
 			
 	\section{Dynamic Binary Translation}
-	\par Binary translation is the process of converting code for one ISA architecture to code for another. There are two types of binary translation: static and dynamic. The main difference between the two approaches is that the static translation translates the entire program before the execution and dynamic translation translates code on demand. This allows the dynamic binary translation (DBT) to deal with challenges that static binary translation do not suffice \cite{b.hawkingsb.demskyd.brueningq.zhao2015}. 
-	\par In this project was used a dynamic binary translation to create the model. It translates one basic block at a time and then executes it. The translated code, as well as the source code, is cached so if one basic block is stored into the translation cache, the cache returns an hit and it is not necessary to translate it again. 
-	\par In this program, it was used the Intel MCS-51, also known as 8051, as the source architecture and the ARMv7-M as the target architecture. After the code refactoring, it is possible to change the source and target architecture. Although, the translation algorithm will need to be rewritten to adapt to the target architecture needs.
+	\par Binary translation is the process of converting code for one ISA architecture to code for another. There are two types of binary translation: static and dynamic. The main difference between the two approaches is that the static translation translates the entire program before the execution and dynamic translation translates code on demand during run time. This allows the dynamic binary translation (DBT) to deal with challenges that static binary translation do not suffice \cite{b.hawkingsb.demskyd.brueningq.zhao2015}. 
+	\par In this project was used a dynamic binary translation to create the model. The DBT engine translates one basic block at a time and then executes it. The translated code, as well as the source code, is cached so if one basic block is stored into the translation cache, the cache returns a hit and it is not necessary to translate it again. 
+	\par The DBT engine had Intel MCS-51, also known as 8051, as the source architecture and the ARMv7-M as the target architecture. After the code refactoring, it is possible to change the source and target architecture. Although, the translation algorithm will need to be rewritten to adapt to the target architecture needs.
 	
 		\subsection{Source Architecture: Intel MCS-51}
 		
@@ -708,15 +711,15 @@
 
 	\section{Implementation Plan}
 	
-	\par The first task is the study of the dynamic binary translator to get more familiar with the algorithm and completely understand it and its characteristics. The group's objective is to model the code generation, so this part will be studied more deeply.
-	\par The second task is the study of the EL framework, where the reference architecture will be implemented following the SCA method.
-	\par The third task is the implementation of the reference architecture in the framework and the code refactoring so it will fit the model. 
-	\par The fourth task is writing the correspondent EL scripts, annotate the source code and write the elaborations. This will make the code configurable.
+	\par The first task was the study of the dynamic binary translator to get more familiar with the algorithm and completely understand it and its characteristics. The group's objective is to model the code generation, so this part will be studied more deeply.
+	\par The second task was the study of the EL framework, where the reference architecture will be implemented following the SCA method.
+	\par The third task was the implementation of the reference architecture in the framework and the code refactoring so it will fit the model. 
+	\par The fourth task was writing the correspondent EL scripts, annotate the source code and write the elaborations. This will make the code configurable.
 	\par It will also be necessary to prepare all the presentations, reports and poster in the project domain.
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=1.1\linewidth]{Images/gantv2}
+		\includegraphics[width=1\linewidth]{Images/gantv2}
 		\caption{Gantt's Diagram.}
 		\label{fig:gantt}
 	\end{figure}
@@ -852,7 +855,7 @@
 	
 	The first two gen functions in table are relevant functions because they are needed to save and restore the context before and after a basic block.
 	
-	\begin{table}[h]
+	\begin{table}[H]
 		\caption{Code Generation Functions}
 		\label{IRTable}
 		\centering
@@ -900,7 +903,7 @@
 	Other aspect to highlight, is that the code generation writes the result of generation in the translation cache.
 	
 	These relationships above cited will be explained during this report, since to model the code we first need to understand the relationships that code generation has with the other parts of the code.
-	\clearpage
+
 
 	\section{Reference Architecture}
 	
