@@ -806,9 +806,9 @@
 	Code refactoring is the process of reorganizing and restructuring of existing code in source files without changing its external behavior. To keep the behavior there are some decisions that need to be made that may introduce overhead in the computation time, which is unwanted in an embedded system. That is why the overhead introduced by refactoring should be as minimal as possible.
 	
 	Code Refactoring can make improvements in code or simply make the code easier to read and understand.
-	In our case, the objective of code refactoring is to make it easier to model. This objective can improve also the maintainability because the code will be more readable. The objectives are conceived by dividing the code in different sources and classes, with which one representing a key part of the DBT.
+	In this case, the objective of code refactoring is to make it easier to model. This objective can improve also the maintainability because the code will be more readable. The objectives are conceived by dividing the code in different sources and classes, with which one representing a key part of the DBT.
 	
-	The original code hasn't many divisions. The part of code responsible for decoding the operands is done in the same file that the part that is responsible of generating the code. 
+	The original code does not have many divisions. The part of code responsible for decoding the operands is done in the same file that the part that is responsible of generating the code. 
 	This is shown in the next diagram (Figure \ref{fig:uml1}).
 	
 	\begin{figure} [H]
@@ -818,7 +818,7 @@
 		\label{fig:uml1}
 	\end{figure}
 	
-	The division of the code will create new classes, to make a separation from the code that is related to the source architecture and the decoding of instructions from the source architecture, to the code that is related to the target architecture and the generating of code to that architecture.
+	The code's division will create new classes, to make a separation from the code that is related to the source architecture and the decoding of instructions from the source architecture, to the code that is related to the target architecture and the generating of code to that architecture.
 	This refactoring and separation will improve the process of switching from architecture to another. This is accomplished because the designer doesn't need to alter complex file with all the functions of target and source architecture, but only the file with the specific functions. 
 	
 	The changes in code are described in next paragraphs:
@@ -830,42 +830,42 @@
 	The translator class was renamed \texttt{CDBTEngine} because is the core class of the DBT that initializes and starts the translation. 
 	
 	\paragraph{CBuffer}
-	The only change in this file was to add the macro \texttt{fetch} to it. The macro \texttt{fetch} was previously in the class translator that was the class that had methods to start and initialize the translation. The macro gives access to the content of the Code Buffer so it makes more sense to be defined in \texttt{CBuffer}, that is were the Code Bufeer is initialize and is load with code.
+	The only change in this file was to add the macro \texttt{fetch} to it. The macro \texttt{fetch} was previously in the class translator that was the class that had methods to start and initialize the translation. The macro gives access to the content of the Code Buffer so it makes more sense to be defined in \texttt{CBuffer}, that is were the Code Bufeer is initialized and loaded with code.
 	
 	\paragraph{TransBuffer}
-	Some minor change was done in the TransBuffer Class to be in accord with the the other classes.
+	Some minor change was done in the TransBuffer Class to be in accordance with the other classes.
 	
 	\paragraph{SourceArchitecture}
-	The Class Source Architecture was introduced to separate the decoder part from the generator part. It is a  class with all the methods that decode should implement.
+	The Class Source Architecture was introduced to separate the decoder from the generator. It includes all the methods that the decode should implement.
 	
 	\paragraph{SourceArch\_8051}
-	SourceArch\_8051 Class is the specific class that decodes instructions from the 8051. This is the Class that the designer needs to change if we wants to switch architecture.  
+	SourceArch\_8051 Class is the specific class that decodes instructions from the 8051 architecture. The designer needs to change this class if we wants to switch architecture.  
 	
 	\paragraph{TargetArchitecture}
 	The Class Target Architecture is a abstract class with the methods responsible for code generation. It has all the methods as virtual to be implemented in the derivate class that is specific to an Architecture.
 	
 	\paragraph{TargetArch\_CortexM3}
-	TargetArch\_CortexM3 Class is where the Generator methods are implemented and is this file that should be alter if we switch to another architecture.  
+	TargetArch\_CortexM3 Class is where the Generator methods are implemented and this file should be altered if it is wanted switch to another target architecture.  
 	
 	\paragraph{Defines}
 	The defines were separated in different files. The defines concerning the Source Architecture were put in the file \texttt{SourceDefines.h} and those defines that were related to the Target Architecture in the file \texttt{TargetDefines.h}. The file \texttt{types.h} continues to exist with only the global defines.
 	
-	The next figure (Figure \ref{fig:refactoring}) shows the relations and division of the classes.
+	The figure \ref{fig:refactoring} shows the relations and division of the classes.
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=0.75\linewidth]{Images/refactoringuml}
+		\includegraphics[width=0.75\linewidth]{Images/newclasses}
 		\caption{Code Refactoring Class Diagram.}
 		\label{fig:refactoring}
 	\end{figure}	
 	
 	
 	\section{Code Generation}
-	The Code Generation is the last stage of translation of code in the DBT. After decoding the source instruction, code generation is call to generate code that follows Target Instruction Set Architecture. The behavior of instructions is reproduced through an Intermediate Representation. The use of an Intermediate Representation provides advantages in increased abstraction and add the possibility of retargeting.
+	The Code Generation is the last stage of code's translation in DBT. After decoding the source instruction, code generation is called to generate code that follows Target Instruction Set Architecture. The behavior of instructions is reproduced through an Intermediate Representation. The use of an Intermediate Representation provides advantages like increased abstraction and add the possibility of retargeting.
 	
-	In this project the Intermediate Representation is defined as set of functions that should be redefined for each target Instruction Set Architecture. This method is based on QEMU Tiny Code Generator. Each of this functions generate the corresponding code to the translation cache. 
+	In this project the Intermediate Representation is defined as set of functions that should be redefined for each target Instruction Set Architecture. This method is based on QEMU Tiny Code Generator \cite{fabricebellard}. Each of this functions generate the corresponding code to the translation cache. 
 	
-	The Figure \ref{fig:generation} represents a example of the translation stages in DBT (instruction decoding and code generation) for the source architecture 8051 and to target architecture Cortex M3.
+	The figure \ref{fig:generation} represents a example of the translation stages in DBT (instruction decoding and code generation) for the source architecture 8051 and to target architecture Cortex M3.
 	
 	\begin{figure} [H]
 		\centering
@@ -874,11 +874,11 @@
 		\label{fig:generation}
 	\end{figure}	
 	
-	The 8051 code has a \texttt{INC A} instruction. The decoder has for each instruction a template of intermediate representation that is a conjunct of functions that should be call in order to generate the corresponding code for that instruction from source architecture. In this case, the intermediate representation for  the \texttt{INC A} instruction is load of a byte from the Accumulator of the source architecture to the temporary register, then add one to that temporary and finally store that temporary register in the accumulator. The code generation process is inside of each of these functions that genarate the corresponding instructions for each intermediate representation.
+	The 8051 code has a \texttt{INC A} instruction. The decoder has, for each instruction, a template of intermediate representation that is a conjunct of functions that should be call in order to generate the corresponding code for that instruction from source architecture. In this case, the intermediate representation for  the \texttt{INC A} instruction is load of a byte from the Accumulator of the source architecture to the temporary register, then add one to that temporary and finally store that temporary register in the accumulator. The code generation process is done inside of each of these functions that generate the corresponding instructions for each intermediate representation.
 	
-	Inside of each function there is temporary variables. And each function apply a series of masks with the opcode and put the registers that function receives in the right place in the instruction. After this process are concluded the temporary variables have the corresponding instruction for the target architecture. The next step, inside the function, is to put that temporary variables in the translation cache for later execution. As we can observe the functions are specific for an architecture, because they generate the specific instruction for an architecture defined by the designer. 
+	Inside of each function there is temporary variables. And each function applies a series of masks with the opcode and put the registers that function receives in the right place in the instruction. After this process are concluded the temporary variables have the corresponding instruction for the target architecture. The next step, inside the function, is to put that temporary variables in the translation cache for later execution. As observed, the functions are specific for an architecture, because they generate the specific instruction for an architecture defined by the designer. 
 
-	As we can observe in the following schematic, these type of intermediate representation has two types of functions:
+	As can be observed in the following schematic, these type of intermediate representation has two types of functions:
 	
 	\begin{figure} [H]
 		\centering
@@ -889,7 +889,7 @@
 	
 	The table \ref{IRTable} represents the functions that are used to generate code. The main objective is  to clarify and show the series of functions that are involved in this part of the DBT. 
 	
-	With the obsevation of the table we can verify that the intermediate representation has a vast number of functions. These functions represent basic instructions or operations, for example, addition, logic or, load, store and so on.
+	With the observation of the table, it is possible to verify that the intermediate representation has a vast number of functions. These functions represent basic instructions or operations, for example, addition, logic or, load, store and so on.
 	
 	The two functions that are most used are load and store because to make some alteration in a variable located in memory, it is need to load that variable before it's used. After the operation complete it is necessary to store again in the same memory position the result.
 	
@@ -934,13 +934,13 @@
 		\end{tabular}
 	\end{table} 
 	
-	As mentioned before, the decoding and code generation are parts of the translation that are tightly correlated. That connection between the two parts is made through the gen functions, in other words the functions of the intermediate representation are called in the decode in order to generate code.
+	As mentioned before, the decoding and code generation are parts of the translation that are tightly correlated. That connection between the two parts is made through the "gen" functions, in other words the functions of the intermediate representation are called in the decode in order to generate code.
 	
-	Another thing that we can conclude is that the generator part of the translation is related to the target architecture. This happens, because to generate code it is need to know the registers and opcodes of the target architecture.
+	Another thing that can be concluded is that the generator part of the translation is related to the target architecture. This happens, because to generate code it is need to know the registers and opcodes of the target architecture.
 	
 	At the same time, the code generator also needs some informations from the source architecture, like for example, the Program Counter.  On the other hand, the code generation needs to have access to the memory of the source architecture to get and set the registers that are mapped in memory and also the memory contents of other positions. The memory of the source architecture is simulated inside of the target memory.  Thus, the code generation only needs to know where that memory is located.
 	
-	Other aspect to highlight, is that the code generation writes the result of generation in the translation cache.
+	Other aspect to highlight is that the code generation writes the result of generation in the translation cache.
 	
 	These relationships above cited will be explained during this report, since to model the code we first need to understand the relationships that code generation has with the other parts of the code.
 
@@ -1502,7 +1502,6 @@
 	
 	\section{Elaborations}
 	
-	\par% Explicar todo o processo para se escreverem Elaborações
 	After all the EL scripts are made with all component, properties, interfaces and the binds, the next step is compile the DBT. To make this we just need to click with right button of the mouse above the script with the top level, as is shown in the figure \ref{fig:compileel}.
 	
 	\begin{figure} [H]
@@ -1516,7 +1515,7 @@
 	
 	The source files of DBT with annotations should be placed in the same folder of the specific elaboration for the component that models that code, or in the folder shared sources if the source as annotations that refer to different components. 
 	
-	The process to make the specific elaborator for a component, is to use the Elaborator API to open sources and replace their annotations.
+	The process to make the specific elaborator for a component, is to use the AbstractElaborator API to open sources and replace their annotations.
 	
 	\begin{lstlisting}[language=Java]
 	package EL.SpecificElaborations.Generator.SpecificGeneratorElaborator;  
@@ -1561,7 +1560,7 @@
 	}
 	\end{lstlisting}
 	
-	After the specific elaboration file is completed with the strings that should substitute the annotations we can build the final sources that will be folder FinalFiles. To do that we should execute the commands that are in the following figures.
+	After the specific elaboration file is completed with the strings that should substitute the annotations, it is possible to build the final sources that will be stored into the directory FinalFiles. To do that, the commands presented in the next figures should be executed.
 	
 	\begin{figure} [H]
 		\centering
@@ -1577,11 +1576,11 @@
 		\label{fig:runElaborator}
 	\end{figure}
 	
-	The first one generates the .class files for each component, abstract elaboration, specific elaboration and so on. And after that generates the Elaborator from that files.
+	The first one generates the \texttt{.class} files for each component, abstract elaboration, specific elaboration and so on. And after that generates the Elaborator from that files.
 	
-	The Second one runs the Elaborator that will generate the final sources files by replacing the annotations and copy the files to the FinalFiles folder.
+	The second command runs the Elaborator that will generate the final sources files by replacing the annotations and copy the files to the FinalFiles folder.
 	
-	After the execution of this commands we can validate the process by comparing the sources files that have the annotation replace by the elaborator with the ones that we want to generate, and the result is a perfect match.
+	After the execution of this commands the process is validated by comparing the sources files that have the annotation replace by the elaborator with the ones that it is wanted to generate, and the result is a perfect match.
 	
 	
 	\section{Optimizations}
@@ -1641,8 +1640,7 @@
 			\hline
 		\end{tabular}
 	\end{table}
-	
-	
+
 	
 	\section{Results}
 	
