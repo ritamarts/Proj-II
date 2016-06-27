@@ -28,7 +28,10 @@
 
 \definecolor{ritagreen}{rgb}{0.0, 0.71, 0.0}
 
-\lstset{emph={interface, compile, language, component, properties, services, references, subcomponents, bind, to, annotation, int, string, float, promote, service, reference, is}, emphstyle=\color{purple}\textbf,
+\lstnewenvironment{EL}{
+\lstset{
+	emph={interface, compile, language, component, properties, services, references, subcomponents, bind, to, annotation, int, string, float, promote, service, reference, is, import}, emphstyle=\color{purple}\textbf,
+	basicstyle=\ttfamily,
 	tabsize=1,
 	frame=single,
 	breaklines=true,
@@ -38,9 +41,27 @@
 	morecomment=[s]{/*}{*/},
 	numbers=left,
 	stepnumber=1,    
-    firstnumber=1,
-    numberfirstline=true
+	firstnumber=1,
+	numberfirstline=true
 }
+}{}
+
+\lstset{
+	basicstyle=\ttfamily,
+	tabsize=1,
+	frame=single,
+	breaklines=true,
+	morecomment=[s][\color{blue}]{"}{"},
+	commentstyle=\color{ritagreen},
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	numbers=left,
+	stepnumber=1,    
+	firstnumber=1,
+	numberfirstline=true
+}
+
+
 
 \newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}}}{\end{list}}
 \newcommand{\abbrlabel}[1]{\makebox[3cm][l]{\textbf{#1}\ \dotfill}}
@@ -163,8 +184,8 @@
 	\par The objectives of this work are:
 	\begin{itemize}
 		\item Identifying the modules for the reference architecture;
-		\item Modeling the implementation of a DBT;
-		\item etc
+		\item Modeling the implementation of a dynamic binary translation;
+		\item 
 	\end{itemize}
 
 	\section{Problem Statement}
@@ -326,16 +347,37 @@
 		
 		\begin{lstlisting}[language=Java]
 		//Replace "anotation" with the "config" value		
-		public void replaceAnotation (String anotation, String config)
+		public void replaceAnotation (String annotation, String config)
 		//Replace "anotation" with the "config" value in "targetfile"
 		public void replaceAnotation(String anotation, String config, String targetfile)
 		\end{lstlisting}
 		
-		\par 		
+		\par The API also provides one method \texttt{generateFinalFiles} that generates the final files with the replaced annotations. The generated files are stored into FinalFiles directory inside EL Package. If some annotations were not successfully replaced, the console prints an error to let the user know that the files were not generated.
+		
+		\begin{lstlisting}[language=Java]
+		//Verifies if there are annotations to replace and generate final files
+		public static void generateFinalFiles()
+		\end{lstlisting}		
 		
 		\subsection{Configuration Files}
 		
-		\par xml
+		\par At compilation time, a configuration file written in XML should be created for each component. The configuration files have two roles: provide properties' values and specify which elaborations should be used.
+		\par The user can alter the properties' values and choose the elaboration in the XML code respective fields. The fields are automatically filled through the EL's code generation. Bellow it is presented one XML file example.
+		
+		\begin{lstlisting}[language=XML]
+		<?xml version="1.0" encoding="UTF-8"?>
+		
+		<component type="Generator">
+			<elaboration default="SpecificGeneratorElaboratorTemplate">SpecificGeneratorElaborator</elaboration>
+			<properties>
+				<property type="bool" name="optimizations" default="false"> 
+					<value>
+						<element>"true"</element>
+					</value>
+				</property>
+			</properties>
+		</component>
+		\end{lstlisting}
 		
 		\subsection{Use Cases}
 		
@@ -364,7 +406,7 @@
 		
 		\par The example diagram shows an EL model, in which the \texttt{Composite} is the component from where the model is generated. In the code this is represented by the expression \texttt{compile Composite}. It is defined a \texttt{language} and both components should follow it. In the \texttt{language} definition it is indicated the annotation symbol to be used by the elaborations later. An \texttt{interface} is created with all the functions that component \texttt{C\_B} provides as services. The component \texttt{C\_A} has one property \texttt{P\_A} of the type \texttt{int} and one reference \texttt{R\_A} to the service of the other component, so this reference must follow the same interface as the respective service from \texttt{C\_B}. The component \texttt{C\_B} offers a service \texttt{S\_B} and has a property \texttt{P\_B} of the type \texttt{string} with the default value text. Finally it is declared the component \texttt{Composite} that contains the two components described above and the \texttt{bind} of the reference \texttt{R\_A} to the service \texttt{S\_B}.
 		
-		\begin{lstlisting}
+		\begin{EL}
 		compile Composite
 
 		language C {
@@ -396,7 +438,7 @@
 			
 			bind a.R_A to b.S_B
 		}
-		\end{lstlisting} 			
+		\end{EL} 			
 			
 	\section{Dynamic Binary Translation}
 	\par Binary translation is the process of converting code for one ISA architecture to code for another. There are two types of binary translation: static and dynamic. The main difference between the two approaches is that the static translation translates the entire program before the execution and dynamic translation translates code on demand. This allows the dynamic binary translation (DBT) to deal with challenges that static binary translation do not suffice \cite{b.hawkingsb.demskyd.brueningq.zhao2015}. 
@@ -1028,7 +1070,7 @@
 				\label{fig:Executor}
 			\end{figure}
 			
-		\subsection{Interfaces}
+		\subsection{Interfaces}\label{sec:interfaces}
 		
 		\par The interfaces make possible for components to connect between each other. To connect two components, one most have one reference of a given interface and the other must have a service of the same interface.
 
@@ -1041,13 +1083,13 @@
 				\item nBitsOpcode -- the number of bit of the opcode may vary. Looking at the Thumb specification, the opcode size is different when using the 16-bit and 32-bit encoding. 
 			\end{itemize}
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_ISA {
 				getWordSize	
 				PCSize
 				nBitsOpcode
 			}
-			\end{lstlisting} 
+			\end{EL} 
 			
 			\subsubsection*{i\_MemSizes}	
 			
@@ -1060,7 +1102,7 @@
 				\item StackSize -- indicates teh size of the stack.
 			\end{itemize}
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_MemSizes{
 				xDataMemSize 	
 				DataMemSize 	
@@ -1068,16 +1110,16 @@
 				HeapSize			
 				StackSize		
 			}
-			\end{lstlisting} 	
+			\end{EL} 	
 
 			\subsubsection*{i\_Registers}
 			
 			\par The \texttt{i\_Registers} interface does not have functions associated, but it should return the available registers for a given architecture.
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_Registers {
 			}
-			\end{lstlisting}
+			\end{EL}
 			
 			\subsubsection*{i\_SrcEnv}	
 			
@@ -1088,13 +1130,13 @@
 				\item envReset -- to reset the environment.
 			\end{itemize}
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_SrcEnv {
 				getPC
 				setPC
 				envReset
 			}
-			\end{lstlisting}
+			\end{EL}
 			
 			\subsubsection*{i\_TCache}
 			
@@ -1107,7 +1149,7 @@
 				\item cacheCode -- stores the code into cache.
 			\end{itemize}
 		
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_TCache {
 				addTag 			
 				getTransAddr		
@@ -1115,7 +1157,7 @@
 				getCurrInsAddr	
 				cacheCode		
 			}
-			\end{lstlisting}
+			\end{EL}
 			
 			\subsubsection*{i\_CCache}
 			
@@ -1125,12 +1167,12 @@
 				\item load -- to load code to translate from code cache.
 			\end{itemize}
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_CCache {
 				fetch	
 				load
 			}
-			\end{lstlisting}
+			\end{EL}
 			
 			\subsubsection*{i\_DMem}
 			
@@ -1140,12 +1182,12 @@
 				\item writeDataMemory -- to write data into data memory.
 			\end{itemize}
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_DMem {
 				readDataMem	 	
 				writeDataMem
 			}
-			\end{lstlisting}			
+			\end{EL}			
 			
 			\subsubsection*{i\_Decode}
 			
@@ -1154,17 +1196,17 @@
 				\item decode -- to use the instruction decoding functions.
 			\end{itemize}
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_Decode {
 				decode 
 			}
-			\end{lstlisting}	
+			\end{EL}	
 					
 			\subsubsection*{i\_Generate}
 			
 			\par The \texttt{i\_Generate} interface has fourty eight functions. All of its purposes is to generate binary code for the target architecture.
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_Generate {
 				helper_ret	helper_call	helper_xmem_range	
 				helper_CC_lazyEv_SNIFFER_BACKDOOR	helper_DA	
@@ -1192,7 +1234,7 @@
 				gen_orShl
 				gen_prolog  gen_epilog
 			}
-			\end{lstlisting}
+			\end{EL}
 			
 			\subsubsection*{i\_Translate}
 			
@@ -1201,11 +1243,11 @@
 				\item translate -- to translate the source code. It is not the same as decode or generate code.
 			\end{itemize}
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_Translate{
 				translate 
 			}
-			\end{lstlisting}
+			\end{EL}
 
 			\subsubsection*{i\_CurrBBExec}
 			
@@ -1214,11 +1256,11 @@
 				\item currBBExecPtr -- to access the pointer to the current basic block being executed.
 			\end{itemize}
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_CurrBBExec{
 				currBBExecPtr
 			}
-			\end{lstlisting}
+			\end{EL}
 			
 			\subsubsection*{i\_Execute}
 			
@@ -1227,11 +1269,11 @@
 				\item execute -- to execute the translate code into the target machine.
 			\end{itemize}
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_Execute{
 				execute
 			}
-			\end{lstlisting}
+			\end{EL}
 			
 			\subsubsection*{i\_Engine}
 			
@@ -1241,12 +1283,12 @@
 				\item runDBT -- to initialize the translation and posterior execution.
 			\end{itemize}
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_Engine{
 				initTranslator
 				runDBT
 			}
-			\end{lstlisting}
+			\end{EL}
 			
 			\subsubsection*{i\_EngineState}		
 			
@@ -1257,31 +1299,164 @@
 				\item pSourceProgMem -- to access the source program memory.
 			\end{itemize}	
 			
-			\begin{lstlisting}
+			\begin{EL}
 			interface i_EngineState{
 				eoBB
 				eoExec
 				pSourceProgMem
 			}
-			\end{lstlisting}	
+			\end{EL}	
 
 	\section{Test Plans}
 	
-	\par To validate all the work, it is necessary to make some tests. These tests consist in:
-	\begin{itemize}
-		\item Elaboration files tests
-	\end{itemize}
-	\par Compare the generated sources with the actual code	using the default properties.
+	\par To validate all the work, it is necessary to make some tests. 
 	
+	\paragraph{Single elaboration test} This test verifies the modeling tool and consists in creating a dummy component or composite, its reference architecture and elaboration. The expected result is the annotations' replacement associated with the source files.  
+	
+	\paragraph{Integration test} This test consists in reunite all the elaborations and generate the full program. It is used the complete reference architecture of the DBT, written in Elaboration Language, and execute the elaborator to generate the source files of the BDT. All the properties are used with default values.
+		
+	\paragraph{Properties test} This test is performed after the other two. Its purpose is to verify if the configuration is doing the proper alteration of the properties' values.
+	
+	\paragraph{Execution test} The last test purpose is to test the generated source files. Then, this files are use to create a project in IAR Workbench and compiled. The binary code is flashed into the SmartFusion2 Advanced Development Kit and executed. If this test succeeds, the project is also successful. 
 %END DESIGN CHAPTER
 %-------------------------------------------
 %START IMPLEMENTATION CHAPTER
 
 \chapter{Implementation Phase}
 
-	\section{Elaboration Language Script}
+	\section{Elaboration Language Scripts}
 	
-	\par Explicar todo o processo para se escreverem scripts EL
+	\par This section shows the concretization of the previously presented reference architecture into EL scripts. Not all scripts will be shown, only the ones that include the component \texttt{Generator} will be presented in here. From this point, promoted services are represented as \texttt{ps\_service}, services promoted twice are represented as \texttt{pps\_} and this goes on. The same for references, but promoted references start with \texttt{pr\_}.
+	\par The interfaces were already defined at section \ref{sec:interfaces} so they will not be shown here.
+	
+	\subsection*{Top level DBT}
+	
+	\par This composite is shown here because it contains all the components and composites of the model.
+	\par Lines 1 and 2 represent the include of the files \texttt{Languages.el} and \texttt{Interfaces.el}. These files include the languages annotations' symbol and the interfaces definition. From line 5 to line 19 are represented the imports of the components and composites files necessary for the DBT composite.
+	\par Line 21 shows the keyword \texttt{compile}. This indicates that \texttt{DBT} is the top level. Then, the \texttt{DBT} component is defined and its property \texttt{Measure} default value is set to \texttt{true} in line 26.
+	\par \texttt{DBT} includes five subcomponents: the source and target clusters, the caches and the BDTEngine (lines 28 to 33). This composite references are defined from lines 35 to 38.
+	\par Last, starting on line 40 till the end, are presented the bounds between references and services of the \texttt{DBT} subcomponents.
+	\begin{EL}
+	import "Languages.el"
+	import "Interfaces.el"
+	
+	// Source and Target Architectures
+	import "Architectures.el"
+	
+	// Source Group
+	import "SourceCluster.el"
+	
+	// Target Group 
+	import "TargetCluster.el"
+	
+	// DBT Engine
+	import "DBTEngine.el"
+	
+	// Memory Structures 
+	import "CodeCache.el"
+	import "TranslationCache.el"
+	import "DataMemory.el"
+	
+	compile DBT
+	
+	component DBT (C)
+	{
+		properties:
+			bool Measure : true
+		
+		subcomponents:
+			SourceCluster srcCluster
+			TargetCluster trgCluster
+			CodeCache cCache
+			TranslationCache tCache	
+			DBTEngine dbtEngine
+		
+		references:
+			i_Engine r_Engine
+			i_MemSizes r_TrgMemSizes
+			i_MemSizes r_SrcMemSizes
+		
+		bind cCache.r_ISA to srcCluster.ps_ISA
+		bind trgCluster.pr_SrcRegisters to srcCluster.ps_Registers
+		bind trgCluster.pr_SrcEnv to srcCluster.ps_SrcEnv
+		bind dbtEngine.pr_DMem to srcCluster.pps_DMem
+		bind dbtEngine.pr_Decode to srcCluster.ps_Decode
+		bind tCache.r_ISA to trgCluster.ps_ISA
+		bind srcCluster.pr_Generate to trgCluster.ps_Generate
+		bind trgCluster.pr_TCache to tCache.s_TCache
+		bind srcCluster.pr_CCache to cCache.s_CCache
+		bind dbtEngine.pr_TransTCache to tCache.s_TCache
+		bind r_Engine to dbtEngine.s_Engine
+		bind trgCluster.pr_Dmem to srcCluster.pps_DMem					
+		bind dbtEngine.pr_Generate to trgCluster.ps_Generate    	
+		bind srcCluster.pr_EngineState to dbtEngine.s_EngineState 		
+		bind trgCluster.pr_r_EngineState to dbtEngine.s_EngineState 	
+		bind dbtEngine.r_CCache to cCache.s_CCache						
+		bind dbtEngine.r_SrcEnv to srcCluster.ps_SrcEnv					
+		bind dbtEngine.r_TCache to tCache.s_TCache
+		bind r_TrgMemSizes to trgCluster.ps_MemSizes
+		bind r_SrcMemSizes to srcCluster.ps_MemSizes
+	}	
+	\end{EL}
+	
+	\subsection*{TargetCluster composite}
+	
+	\par This composite contains the target architecture and generator components. From line 1 to 4 are included .el files of the used components, interfaces and language. Lines 12 and 13 shown the bound between \texttt{Generator} references and the \texttt{TargetArch} services. The next lines show the necessary promotes to let these components references and services be visible to other components.
+		
+	\begin{EL}
+		import "Languages.el"
+		import "Interfaces.el"
+		import "Generator.el"
+		import "Architectures.el"
+		
+		component TargetCluster (C)
+		{
+			subcomponents:
+			TargetArch target
+			Generator gen 
+			
+			bind gen.r_ISA to target.s_ISA
+			bind gen.r_TrgRegisters to target.s_Registers
+			
+			promote reference gen.r_SrcRegisters as pr_SrcRegisters
+			promote reference gen.r_SrcEnv 		 as pr_SrcEnv
+			promote reference gen.r_TCache 		 as pr_TCache
+			promote reference gen.r_DMem		 as pr_Dmem
+			promote reference gen.r_EngineState  as pr_r_EngineState
+			
+			promote service target.s_MemSizes as ps_MemSizes
+			promote service target.s_ISA as ps_ISA	
+			promote service gen.s_Generate as ps_Generate
+		}
+	\end{EL}
+	
+	\subsection*{Generator}
+	
+	\par The next code corresponds to the implementation of the component \texttt{Generator}. Line 1 and 2 include the necessary files to use the language and the interfaces definition. The component \texttt{Generator} has two properties, as explained later. The default value of the property \texttt{optimizations} is \texttt{false} and this means that the code optimizations will not run it the configuration file value is leaved by default. The property \texttt{trgCodeTracing} is set to \texttt{true} by default, this means that the translated instructions will be printed in serial port console at execution.
+	\par The service \texttt{s\_Generate} is declared at line 10. The references' declaration starts at line 11.
+	
+	\begin{EL}
+		import "Languages.el"
+		import "Interfaces.el"
+		
+		component Generator (C)
+		{
+			properties:
+				bool optimizations : false
+				bool trgCodeTracing : true
+			services:
+				i_Generate s_Generate	
+			references:
+				i_Registers r_SrcRegisters
+				i_Registers r_TrgRegisters
+				i_SrcEnv r_SrcEnv
+				i_ISA r_ISA
+				i_TCache r_TCache
+				i_DMem r_DMem				
+				i_EngineState r_EngineState
+		}
+	\end{EL}
+	
 	
 	\section{Elaborations}
 	
