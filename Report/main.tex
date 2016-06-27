@@ -1502,7 +1502,7 @@
 	
 	\section{Elaborations}
 	
-	\par% Explicar todo o processo para se escreverem Elaborações
+	\par
 	After all the EL scripts are made with all component, properties, interfaces and the binds, the next step is compile the DBT. To make this we just need to click with right button of the mouse above the script with the top level, as is shown in the figure \ref{fig:compileel}.
 	
 	\begin{figure} [H]
@@ -1512,9 +1512,43 @@
 		\label{fig:compileel}
 	\end{figure}
 	
-	This will generate a series of files and folders. It will generate also the XML for each component and the template for specific elaborations.
+	This will generate a series of files Java and XML. The two most important folders are the Configs where the configurable XML is put and the \texttt{SpecificElaborations} where it generates a template for each component. 
+	If we don't wanna alter the template and because when the EL is compiled the file is overwritten we should alter the XML of a specific component to have the specific elaboration file that we want.
+	In the case of the Generator we want the \texttt{SpecificGeneratorElaborator} instead of template that is set by default so we alter the XML as is shown in the line 4 of the following XML.
+	\begin{EL}
+		<?xml version="1.0" encoding="UTF-8"?>	
+		<component type="Generator">
+		<elaboration default="SpecificGeneratorElaboratorTemplate">SpecificGeneratorElaborator</elaboration>
+	\end{EL}
 	
 	The source files of DBT with annotations should be placed in the same folder of the specific elaboration for the component that models that code, or in the folder shared sources if the source as annotations that refer to different components. 
+	
+	The annotations that the elaborator for the generator replaced are described in the following table (Table \ref{annotationTable}).
+	\begin{table}[h]
+		\caption{Code Generation Functions}
+		\label{annotationTable}
+		\centering
+		\begin{tabular}{|l||l||l|}
+			\hline
+			\textbf{Annotations} 	& \textbf{File} 			& \textbf{Type}\\ \hline
+			Generator\_optimization & TargetArch\_CortexM3.h 	& Property replacement \\ \hline
+			Generator\_cacheCode	& TargetArch\_CortexM3.cpp	& Interface Functions replacement \\ \hline
+			Generator\_getPC		& TargetArch\_CortexM3.cpp	& Interface Functions replacement \\ \hline
+			Generator\_readDataMem	& TargetArch\_CortexM3.cpp	& Interface Functions replacement \\ \hline
+			Generator\_eoBB			& TargetArch\_CortexM3.cpp	& Interface Functions replacement \\ \hline
+			Generator\_eoExec		& TargetArch\_CortexM3.cpp	& Interface Functions replacement \\ \hline
+			Generator\_tracing		& SharedSources/types.h		& String replacement \\ \hline
+			
+		\end{tabular}
+	\end{table}	
+	
+	The table shows that the generator is only going to alter the files TargetArch\_CortexM3.h and TargetArch\_CortexM3.cpp and a shared source named types.
+	
+	The third column of the table as the type of replacement. As we can observe there are three types the first one is replace the annotation with the value of a property that is alter in the XML. 
+	
+	The second type is the interface functions replacement, this type is to respect the interfaces from the model. If a component makes reference to a service in the other component, we need in the code to make and replace a annotation, that is according with the function of that interface, in order to respect the Reference Architecture. 
+	
+	And last type is a direct string replacement. In this case we use a property to know if the elaborator should comment or simply delete the annotation. The elaborator replace with a string with the comment or with nothing, deleting the annotation from the source file.
 	
 	The process to make the specific elaborator for a component, is to use the Elaborator API to open sources and replace their annotations.
 	
@@ -1531,58 +1565,74 @@
 	import EL.Components.*;
 	
 	public class SpecificGeneratorElaborator extends AbstractGeneratorElaborator {
-	SpecificConfigReader scr = null;
+		SpecificConfigReader scr = null;
 	
-	public void generate(){
-	System.out.println("This is the Generator template specific elaboration.");
-	openAnnotatedSource("TargetArch_CortexM3.h");
-	replaceAnotation("Generator_optimization",String.valueOf(target.get_optimizations()));
+		public void generate(){
+			System.out.println("This is the Generator template specific elaboration.");
+			openAnnotatedSource("TargetArch_CortexM3.h");
+			replaceAnotation("Generator_optimization",String.valueOf(target.get_optimizations()));
 	
-	openAnnotatedSource("TargetArch_CortexM3.cpp");		
-	AbstractTranslationCacheElaborator TCacheElab = (AbstractTranslationCacheElaborator) getElaborator((_TranslationCache) target.get_r_TCache());
-	replaceAnotation("Generator_cacheCode", (String) TCacheElab.getI_TCacheElaboratorCacheCode());
+			openAnnotatedSource("TargetArch_CortexM3.cpp");		
+			AbstractTranslationCacheElaborator TCacheElab = (AbstractTranslationCacheElaborator) getElaborator((_TranslationCache) target.get_r_TCache());
+			replaceAnotation("Generator_cacheCode", (String) TCacheElab.getI_TCacheElaboratorCacheCode());
 	
-	AbstractSourceEnvElaborator SrcEnvElab = (AbstractSourceEnvElaborator) getElaborator((_SourceEnv) target.get_r_SrcEnv());
-	replaceAnotation("Generator_getPC", (String) SrcEnvElab.getI_SrcEnvElaboratorGetPC());
+			AbstractSourceEnvElaborator SrcEnvElab = (AbstractSourceEnvElaborator) getElaborator((_SourceEnv) target.get_r_SrcEnv());
+			replaceAnotation("Generator_getPC", (String) SrcEnvElab.getI_SrcEnvElaboratorGetPC());
 	
-	AbstractDataMemoryElaborator DataMemElab = (AbstractDataMemoryElaborator) getElaborator((_DataMemory) target.get_r_DMem());
-	replaceAnotation("Generator_readDataMem", (String) DataMemElab.getI_DMemElaboratorReadDataMem());
+			AbstractDataMemoryElaborator DataMemElab = (AbstractDataMemoryElaborator) getElaborator((_DataMemory) target.get_r_DMem());
+			replaceAnotation("Generator_readDataMem", (String) DataMemElab.getI_DMemElaboratorReadDataMem());
 	
-	AbstractDBTEngineElaborator DBTEngineElab = (AbstractDBTEngineElaborator) getElaborator((_DBTEngine) target.get_r_EngineState());		
+			AbstractDBTEngineElaborator DBTEngineElab = (AbstractDBTEngineElaborator) getElaborator((_DBTEngine) target.get_r_EngineState());		
 	
-	replaceAnotation("Generator_eoBB", (String) DBTEngineElab.getI_EngineStateElaboratorEoBB());
-	replaceAnotation("Generator_eoExec", (String) DBTEngineElab.getI_EngineStateElaboratorEoExec());
+			replaceAnotation("Generator_eoBB", (String) DBTEngineElab.getI_EngineStateElaboratorEoBB());
+			replaceAnotation("Generator_eoExec", (String) DBTEngineElab.getI_EngineStateElaboratorEoExec());
 	
-	openAnnotatedSharedSource("types.h");
-	if(target.get_trgCodeTracing()==false)
-	replaceAnotation("Generator_tracing","//");
-	else
-	replaceAnotation("Generator_tracing","");
+			openAnnotatedSharedSource("types.h");
+			if(target.get_trgCodeTracing()==false)
+				replaceAnotation("Generator_tracing","//");
+			else
+				replaceAnotation("Generator_tracing","");
+		}
 	}
 	\end{lstlisting}
 	
-	After the specific elaboration file is completed with the strings that should substitute the annotations we can build the final sources that will be folder FinalFiles. To do that we should execute the commands that are in the following figures.
+	After the specific elaboration file is completed with all that substitutions to all the annotations that the component replace, we can build the final sources that will be folder FinalFiles. To do that we should execute the commands that are in the following figures.
+	
+	The first one (Figure \ref{fig:build}) generates the .class files for each component, abstract elaboration, specific elaboration and so on. And after that generates the Elaborator from that files.
+	
+	The Second one (Figure \ref{fig:runElaborator} runs the Elaborator that will generate the final sources files by replacing the annotations and copy the files to the FinalFiles folder. It executes all the code of the specific elaboration, and can open the XML files to get a property value. At the end if everything is fine and the sources were generated it prints the message: "All final files successfully generated!". If something goes wrong in the elaboration, if it has some kind of error in the elaboration files it prints a error message informing the user.
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=1\linewidth]{Images/script}
+		\includegraphics[width=0.9\linewidth]{Images/script}
 		\caption{Generation of the elaborator.}
 		\label{fig:build}
 	\end{figure}
 	
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=1\linewidth]{Images/scriptRunElaborator}
+		\includegraphics[width=0.9\linewidth]{Images/scriptRunElaborator}
 		\caption{Running the elaborator.}
 		\label{fig:runElaborator}
 	\end{figure}
 	
-	The first one generates the .class files for each component, abstract elaboration, specific elaboration and so on. And after that generates the Elaborator from that files.
+	The final files will have all the notations replaced with the String that the user defined. For example in the case of the annotation in the Figure \ref{fig:annotationReplaced}, it will be replaced by the property optimizations. 
 	
-	The Second one runs the Elaborator that will generate the final sources files by replacing the annotations and copy the files to the FinalFiles folder.
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{Images/anotation}
+		\caption{Annotation of optimizations.}
+		\label{fig:annotation}
+	\end{figure}
 	
-	After the execution of this commands we can validate the process by comparing the sources files that have the annotation replace by the elaborator with the ones that we want to generate, and the result is a perfect match.
+	The annotation will be replaced with the value that the user put in the XML. If it has default value and the user didn't set other value in the XML it will be replaced by the default value as is shown in the Figure \ref{fig:CodeCache}
 	
+	\begin{figure} [H]
+		\centering
+		\includegraphics[width=0.3\linewidth]{Images/anotationReplaced}
+		\caption{Annotation replaced by it's default value.}
+		\label{fig:annotationReplaced}
+	\end{figure}
 	
 	\section{Optimizations}
 	
@@ -1642,12 +1692,91 @@
 		\end{tabular}
 	\end{table}
 	
-	
-	
 	\section{Results}
 	
+	The implementations should be tested in order to validate if they are working properly.
+	To do that we will compare files with what it should generate and observe if the elaborator is working properly. The tests that will be done are explain in detail in the chapther Test Plans.
+	
+	\paragraph{Single Elaboration Test}
+	This test is to validate the overall process, it was created a dummy component with the language C and the following annotation. 
+	
+	\begin{EL}
+		compile dummy
+		component dummy(C){}
+		language C {annotation: "@"}
+	\end{EL}
+	
+	
+	It was created a file with just a annotation and put in the same folder of the specific elaboration. The annotation was named DBT.Then it was add in the elaborator the following functions:
+	
+	\begin{lstlisting}[language=Java]
+		openAnnotatedSource("file.c");
+		replaceAnotation("DBT","it works");
+	\end{lstlisting}
+	
+	The result was that the file was copy to FinalFiles folder with annotation replaced by the string "it works".
+	
+	\paragraph{Integration Test}
+	The next test is to make all the specific elaborations and place the annotated source code in the right place, and verify if with all the elaborations build. With this test we verify that all annotation with properties change to the default value of that property, all the files were generated, all the annotations were replaced and that the shared sources were replaced in right place by the right component.
+	
+	\paragraph{Properties Test}
+	In this test we alter the properties of the XML and watch them change by replacing the annotation with the property value. This test work just as was described.
+		
+	\paragraph{Execution Test}
+	In the final test, the generated final files that were generated previously and created a project in IAR Workbench. The files were compiled with zero errors. The results of the execution of that code are shown in the following code and validate this test.
+	
+	\begin{lstlisting}
+	MicroSemi SmartFusion2
+	Device running on   
+	M2S150        
+	
+	TBuffer starts at 0x20005318, with a size of 8192 bytes
+	Buffer end address is 0x20007318
+	cache size 0 NOT BEING USED. CODE BUFFER IN USE
+	XDATA_SIZE base address is 0x20007320
+	end address is 0x20009320
+	Source program at 0x60040000 address, with size of 32768 bytes
+	Exit address at 0x34f7
+	Entering envReset()
+	
+	Varable env.dataMem at 30000000
 
+	Varable env.dataMem[SP] at 30000081
+	
+	Entering condCodedHandlerInit()
+	(int *)(env.dataMem) = 0x30000000
+	(int*)&env.dataMem[PSW] = 0x300000d0
+	Configuring Sniffer module...
+	Enabling BusFault...
+	Configuring sniff address as READ_EN...
+	Enabling Sniffer Module...
+	Checking Sniffer config:
+	sniffer_ctrl: 1
+	sniffer_watch_address: 0x300000d0
+	sniff_en: 2
+	codeCache.load()
+	Starting runDBT now...
+	
+	...trans 0x0
+	## 0x0 MISS ##
+	PUSH {R4, R5, R6, R7, R8, R9, LR, }
+	MOV R4, R0
+	# 0x0 <=> 0x2000531e
+	MOVW R9,#102
+	MOVW R8,#20696
+	MOVT R8,#8192
+	STRH R9,[R8, #0]
+		LJMP 0x0066
+	
+	POP {R4, R5, R6, R7, R8, R9, PC, }
+	exec...
 
+	\end{lstlisting}
+	After all these tests results, we can verify that all the things are working fine and that the code that is generated is fully functional and can be used to binary translation.
+	
+	
+	
+	
 %END CONCEPTION CHAPTER
 %-------------------------------------------
 %START CONCLUSION CHAPTER
