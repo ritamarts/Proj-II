@@ -1356,7 +1356,7 @@
 	
 	\paragraph{Single elaboration test} This test verifies the modeling tool and consists in creating a dummy component or composite, its reference architecture and elaboration. The expected result is the annotations' replacement associated with the source files.  
 	
-	\paragraph{Integration test} This test consists in reunite all the elaborations and generate the full program. It is used the complete reference architecture of the DBT, written in Elaboration Language, and execute the elaborator to generate the source files of the BDT. All the properties are used with default values.
+	\paragraph{Integration test} This test consists in reunite all the elaborations and generate the full program. It is used the complete reference architecture of the DBT, written in Elaboration Language, and execute the elaborator to generate the source files of the DBT. All the properties are used with default values.
 		
 	\paragraph{Properties test} This test is performed after the other two. Its purpose is to verify if the configuration is doing the proper alteration of the properties' values.
 	
@@ -1377,7 +1377,7 @@
 	\par This composite is shown here because it contains all the components and composites of the model.
 	\par Lines 1 and 2 represent the include of the files \texttt{Languages.el} and \texttt{Interfaces.el}. These files include the languages annotations' symbol and the interfaces definition. From line 5 to line 19 are represented the imports of the components and composites files necessary for the DBT composite.
 	\par Line 21 shows the keyword \texttt{compile}. This indicates that \texttt{DBT} is the top level. Then, the \texttt{DBT} component is defined and its property \texttt{Measure} default value is set to \texttt{true} in line 26.
-	\par \texttt{DBT} includes five subcomponents: the source and target clusters, the caches and the BDTEngine (lines 28 to 33). This composite references are defined from lines 35 to 38.
+	\par \texttt{DBT} includes five subcomponents: the source and target clusters, the caches and the DBTEngine (lines 28 to 33). This composite references are defined from lines 35 to 38.
 	\par Last, starting on line 40 till the end, are presented the bounds between references and services of the \texttt{DBT} subcomponents.
 	\begin{EL}
 	import "Languages.el"
